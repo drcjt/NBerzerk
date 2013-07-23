@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Bezerk
+namespace NBezerk
 {
-    public partial class BezerkForm : Form
+    public partial class NBezerkForm : Form
     {
         Bitmap backBuffer;
 
         string maze;
 
-        public BezerkForm()
+        public NBezerkForm()
         {
             InitializeComponent();
 

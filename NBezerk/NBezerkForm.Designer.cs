@@ -1,6 +1,6 @@
-﻿namespace Bezerk
+﻿namespace NBezerk
 {
-    partial class BezerkForm
+    partial class NBezerkForm
     {
         /// <summary>
         /// Required designer variable.
