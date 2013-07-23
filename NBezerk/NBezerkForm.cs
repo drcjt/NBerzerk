@@ -12,6 +12,8 @@ namespace NBezerk
 {
     public partial class NBezerkForm : Form
     {
+        SolidBrush wallBrush = new SolidBrush(Color.FromArgb(0, 0, 108));
+
         Bitmap backBuffer;
 
         string maze;
@@ -53,17 +55,6 @@ namespace NBezerk
             }
         }
 
-        private static Point[] pillarLocations = new Point[8] {
-            new Point(56, 68),
-            new Point(104, 68),
-            new Point(152, 68),
-            new Point(200, 68),
-            new Point(56, 136),
-            new Point(104, 136),
-            new Point(152, 136),
-            new Point(200, 136)
-        };
-
         void DrawRoom()
         {
             using (var g = Graphics.FromImage(backBuffer))
@@ -71,56 +62,34 @@ namespace NBezerk
                 g.Clear(Color.Black);
 
                 // Draw top walls
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 4, 0, 99, 4);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 152, 0, 99, 4);
+                g.FillRectangle(wallBrush, 4, 0, 99, 4);
+                g.FillRectangle(wallBrush, 152, 0, 99, 4);
 
                 // Draw bottom walls
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 4, 204, 99, 4);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 152, 204, 99, 4);
+                g.FillRectangle(wallBrush, 4, 204, 99, 4);
+                g.FillRectangle(wallBrush, 152, 204, 99, 4);
 
                 // Draw left walls
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 4, 0, 4, 71);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 4, 136, 4, 71);
+                g.FillRectangle(wallBrush, 4, 0, 4, 71);
+                g.FillRectangle(wallBrush, 4, 136, 4, 71);
 
                 // Draw right walls
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 248, 0, 4, 71);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), 248, 136, 4, 71);
+                g.FillRectangle(wallBrush, 248, 0, 4, 71);
+                g.FillRectangle(wallBrush, 248, 136, 4, 71);
 
                 for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
                 {
-                    // Wall segments are always 52 pixels long, 4 deep
-                    Rectangle wallRectangle = new Rectangle();
+                    Point pillarLocation = new Point(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
 
                     char wallDirection = maze[pillarIndex];
 
-                    switch (wallDirection)
-                    {
-                        case 'N':
-                            wallRectangle.X = pillarLocations[pillarIndex].X;
-                            wallRectangle.Y = pillarLocations[pillarIndex].Y - 67;
-                            wallRectangle.Width = 4;
-                            wallRectangle.Height = 71;
+                    Rectangle wallRectangle = new Rectangle();
+                    wallRectangle.X = (wallDirection == 'W') ? pillarLocation.X - 52 : pillarLocation.X;
+                    wallRectangle.Y = (wallDirection == 'N') ? pillarLocation.Y - 67 : pillarLocation.Y;
+                    wallRectangle.Width = (wallDirection == 'N' || wallDirection == 'S') ? 4 : 52;
+                    wallRectangle.Height = (wallDirection == 'N' || wallDirection == 'S') ? 71 : 4;
 
-                            break;
-                        case 'S':
-                            wallRectangle.Location = pillarLocations[pillarIndex];
-                            wallRectangle.Width = 4;
-                            wallRectangle.Height = 71;
-                            break;
-                        case 'E':
-                            wallRectangle.Location = pillarLocations[pillarIndex];
-                            wallRectangle.Width = 52;
-                            wallRectangle.Height = 4;
-                            break;
-                        case 'W':
-                            wallRectangle.X = pillarLocations[pillarIndex].X - 52;
-                            wallRectangle.Y = pillarLocations[pillarIndex].Y;
-                            wallRectangle.Width = 52;
-                            wallRectangle.Height = 4;
-                            break;
-                    }
-
-                    g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 108)), wallRectangle);
+                    g.FillRectangle(wallBrush, wallRectangle);
                 }
             }
         }
