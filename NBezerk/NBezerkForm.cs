@@ -43,54 +43,16 @@ namespace NBezerk
             Paint += new PaintEventHandler(GamePaint);
         }
 
-        bool isUpPressed = false;
-        bool isDownPressed = false;
-        bool isLeftPressed = false;
-        bool isRightPressed = false;
+        bool[] isKeyPressed = new bool[Enum.GetNames(typeof(Keys)).Length];
 
         void KeyDownHandler(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.Up:
-                    isUpPressed = true;
-                    break;
-
-                case Keys.Down:
-                    isDownPressed = true;
-                    break;
-
-                case Keys.Left:
-                    isLeftPressed = true;
-                    break;
-
-                case Keys.Right:
-                    isRightPressed = true;
-                    break;
-            }
+            isKeyPressed[(int)(e.KeyCode)] = true;
         }
-
 
         void KeyUpHandler(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.Up:
-                    isUpPressed = false;
-                    break;
-
-                case Keys.Down:
-                    isDownPressed = false;
-                    break;
-
-                case Keys.Left:
-                    isLeftPressed = false;
-                    break;
-
-                case Keys.Right:
-                    isRightPressed = false;
-                    break;
-            }
+            isKeyPressed[(int)(e.KeyCode)] = false;
         }
 
 
@@ -171,19 +133,19 @@ namespace NBezerk
                 Invalidate();
             }
 
-            if (isUpPressed)
+            if (isKeyPressed[(int)(Keys.Up)])
             {
                 playerPosition.Y = playerPosition.Y - 3;
             }
-            if (isDownPressed)
+            if (isKeyPressed[(int)(Keys.Down)])
             {
                 playerPosition.Y = playerPosition.Y + 3;
             }
-            if (isLeftPressed)
+            if (isKeyPressed[(int)(Keys.Left)])
             {
                 playerPosition.X = playerPosition.X - 3;
             }
-            if (isRightPressed)
+            if (isKeyPressed[(int)(Keys.Right)])
             {
                 playerPosition.X = playerPosition.X + 3;
             }
