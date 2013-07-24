@@ -55,7 +55,6 @@ namespace NBezerk
             isKeyPressed[(int)(e.KeyCode)] = false;
         }
 
-
         void CreateBackBuffer(object sender, EventArgs e)
         {
             if (backBuffer != null)
@@ -70,7 +69,6 @@ namespace NBezerk
         {
             if (backBuffer != null)
             {
-                //e.Graphics.DrawImageUnscaled(backBuffer, Point.Empty);
                 e.Graphics.DrawImage(backBuffer, ClientRectangle);
             }
         }
@@ -80,8 +78,6 @@ namespace NBezerk
             Rectangle destRect = new Rectangle(playerPosition, new Size(8, 16));
             Rectangle srcRect = new Rectangle(0, 0, 8, 16);
             g.DrawImage(player, destRect, srcRect, GraphicsUnit.Pixel);
-            //Image i = new 
-            //
         }
 
         void DrawRoom(Graphics g)
