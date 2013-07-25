@@ -8,10 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using GameFramework;
+
 namespace NBezerk
 {
     public partial class NBezerkForm : Form
     {
+        QueryPerfCounter timer = new QueryPerfCounter();
+        double timeToRenderFrame = 0;
+
         SolidBrush wallBrush = new SolidBrush(Color.FromArgb(0, 0, 108));
 
         Bitmap backBuffer;
@@ -67,10 +72,20 @@ namespace NBezerk
 
         void GamePaint(object sender, PaintEventArgs e)
         {
-            if (backBuffer != null)
-            {
-                e.Graphics.DrawImage(backBuffer, ClientRectangle);
-            }
+            timer.Stop();
+            timeToRenderFrame = timer.Duration(1);
+
+            timer.Start();
+
+            e.Graphics.DrawImage(backBuffer, ClientRectangle);
+            DrawFPS(e.Graphics);
+        }
+
+        void DrawFPS(Graphics g)
+        {
+            double FPS = Math.Round(1000000000 / timeToRenderFrame, 2, MidpointRounding.AwayFromZero);
+            g.FillRectangle(new SolidBrush(Color.Black), 5, 5, 140, 22);
+            g.DrawString(String.Format("FPS: {0}", FPS), new Font("Arial", 16), new SolidBrush(Color.Yellow), new PointF(5, 5));
         }
 
         void DrawPlayer(Graphics g)
