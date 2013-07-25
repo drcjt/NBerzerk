@@ -30,15 +30,15 @@
         {
             this.SuspendLayout();
             // 
-            // BezerkForm
+            // NBezerkForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(496, 409);
+            this.ClientSize = new System.Drawing.Size(752, 633);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(512, 448);
-            this.MinimumSize = new System.Drawing.Size(512, 448);
-            this.Name = "BezerkForm";
+            this.MaximumSize = new System.Drawing.Size(768, 672);
+            this.MinimumSize = new System.Drawing.Size(768, 672);
+            this.Name = "NBezerkForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Bezerk";
             this.ResumeLayout(false);

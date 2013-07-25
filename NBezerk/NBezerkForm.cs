@@ -15,8 +15,12 @@ namespace NBezerk
         SolidBrush wallBrush = new SolidBrush(Color.FromArgb(0, 0, 108));
 
         Bitmap backBuffer;
+
         Image player;
         Point playerPosition = new Point(100, 100);
+
+        int playerFrame = 0;
+        bool facingRight = true;
 
         string maze;
 
@@ -24,7 +28,8 @@ namespace NBezerk
         {
             InitializeComponent();
 
-            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer, true);
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | 
+                     ControlStyles.DoubleBuffer, true);
 
             player = LoadImage("player.png");
 
@@ -32,7 +37,7 @@ namespace NBezerk
             maze = MazeGenerator.GenerateMaze(room);
 
             Timer GameTimer = new Timer();
-            GameTimer.Interval = 10;
+            GameTimer.Interval = 20;
             GameTimer.Tick += new EventHandler(GameTick);
             GameTimer.Start();
 
@@ -57,11 +62,6 @@ namespace NBezerk
 
         void CreateBackBuffer(object sender, EventArgs e)
         {
-            if (backBuffer != null)
-            {
-                backBuffer.Dispose();
-            }
-
             backBuffer = new Bitmap(256, 224);
         }
 
@@ -76,7 +76,7 @@ namespace NBezerk
         void DrawPlayer(Graphics g)
         {
             Rectangle destRect = new Rectangle(playerPosition, new Size(8, 16));
-            Rectangle srcRect = new Rectangle(0, 0, 8, 16);
+            Rectangle srcRect = new Rectangle(8 * playerFrame, 0, 8, 16);
             g.DrawImage(player, destRect, srcRect, GraphicsUnit.Pixel);
         }
 
@@ -116,35 +116,58 @@ namespace NBezerk
 
         void GameTick(object sender, EventArgs e)
         {
-            if (backBuffer != null)
+            using (var g = Graphics.FromImage(backBuffer))
             {
-                using (var g = Graphics.FromImage(backBuffer))
-                {
-                    g.Clear(Color.Black);
+                g.Clear(Color.Black);
 
-                    DrawRoom(g);
-                    DrawPlayer(g);
+                DrawRoom(g);
+                DrawPlayer(g);
+
+                if (isKeyPressed[(int)(Keys.Up)])
+                {
+                    playerPosition.Y = playerPosition.Y - 1;
+                }
+                if (isKeyPressed[(int)(Keys.Down)])
+                {
+                    playerPosition.Y = playerPosition.Y + 1;
+                }
+                if (isKeyPressed[(int)(Keys.Left)])
+                {
+                    if (facingRight && playerFrame < 5)
+                    {
+                        playerFrame = 5;
+                        facingRight = false;
+                    }
+                    playerPosition.X = playerPosition.X - 1;
+                }
+                if (isKeyPressed[(int)(Keys.Right)])
+                {
+                    if (!facingRight && playerFrame > 4)
+                    {
+                        playerFrame = 0;
+                        facingRight = true;
+                    }
+                    playerPosition.X = playerPosition.X + 1;
                 }
 
-                Invalidate();
+                if (isKeyPressed[(int)(Keys.Up)] || isKeyPressed[(int)(Keys.Down)] ||
+                    isKeyPressed[(int)(Keys.Left)] || isKeyPressed[(int)(Keys.Right)])
+                {
+                    playerFrame++;
+
+                    if (playerFrame % 4 == 0)
+                    {
+                        playerFrame = playerFrame - 4;
+                    }
+                }
+                else
+                {
+                    playerFrame = 0;
+                    facingRight = true;
+                }
             }
 
-            if (isKeyPressed[(int)(Keys.Up)])
-            {
-                playerPosition.Y = playerPosition.Y - 3;
-            }
-            if (isKeyPressed[(int)(Keys.Down)])
-            {
-                playerPosition.Y = playerPosition.Y + 3;
-            }
-            if (isKeyPressed[(int)(Keys.Left)])
-            {
-                playerPosition.X = playerPosition.X - 3;
-            }
-            if (isKeyPressed[(int)(Keys.Right)])
-            {
-                playerPosition.X = playerPosition.X + 3;
-            }
+            Invalidate();
         }
 
         Image LoadImage(string imageFile)
