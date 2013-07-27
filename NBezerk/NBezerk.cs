@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using GameFramework;
+
 namespace NBezerk
 {
     static class NBezerk
@@ -14,9 +16,6 @@ namespace NBezerk
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             NBezerkGame game = new NBezerkGame();
             game.Run();
         }

@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
+using SharpDX;
+using SharpDX.Direct2D1;
+
 namespace GameFramework
 {
     public interface IGame
     {
-        Size Resolution { get; }
-        Color BackgroundColor { get; }
+        DrawingSize Resolution { get; }
+        Color4 BackgroundColor { get; }
 
         double MaxFrameRate { get; }
 
@@ -18,7 +21,8 @@ namespace GameFramework
 
         void Run();
 
-        void Draw(Graphics g);
+        void LoadContent(RenderTarget windowRenderTarget);
+        void Render(RenderTarget windowRenderTarget);
         void Update();
     }
 }

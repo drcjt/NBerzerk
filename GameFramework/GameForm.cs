@@ -5,14 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Diagnostics;
+
+using SharpDX;
+using SharpDX.DirectWrite;
+using SharpDX.Windows;
+using SharpDX.Direct2D1;
+using SharpDX.DXGI;
 
 namespace GameFramework
 {
-    public class GameForm : Form
+    public class GameForm : RenderForm
     {
-        private QueryPerfCounter timer;
-        private Bitmap currentFrame;
-        private double timeToRenderFrame = 0;
+        SharpDX.DirectWrite.Factory dwFactory = new SharpDX.DirectWrite.Factory();
+
+        WindowRenderTarget d2dRenderTarget;
+
+        public void Run()
+        {
+            game.LoadContent(d2dRenderTarget);
+
+            RenderLoop.Run(this, OnApplicationIdle);
+        }
 
         private IGame game;
 
@@ -20,63 +36,34 @@ namespace GameFramework
         {
             this.game = game;
 
-            timer = new QueryPerfCounter();
-            currentFrame = new Bitmap(game.Resolution.Width, game.Resolution.Height);
+            Width = game.Resolution.Width;
+            Height = game.Resolution.Height;
 
-            Text = "Bezerk";
-            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer, true);
+            HwndRenderTargetProperties hwndRenderProperties = new HwndRenderTargetProperties();
+            hwndRenderProperties.Hwnd = this.Handle;
+            hwndRenderProperties.PixelSize = new DrawingSize(game.Resolution.Width, game.Resolution.Height);
+            hwndRenderProperties.PresentOptions = PresentOptions.None;
 
-            Resize += new EventHandler(ResizeForm);
-            Paint += new PaintEventHandler(GamePaint);
-            
+            RenderTargetProperties renderTargetProperties = new RenderTargetProperties();
+            renderTargetProperties.PixelFormat = new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied);
+
+            d2dRenderTarget = new WindowRenderTarget(new SharpDX.Direct2D1.Factory(), renderTargetProperties, hwndRenderProperties);
         }
 
-        private void ResizeForm(object sender, EventArgs e)
-        {
-            Invalidate();
-        }
-
-        private void GamePaint(object sender, PaintEventArgs e)
-        {
-            timer.Stop();
-            timeToRenderFrame = timer.Duration(1);
-
-            // Limit frame rate
-            while (timeToRenderFrame < 1000000000 / game.MaxFrameRate)
-            {
-                timer.Stop();
-                timeToRenderFrame = timer.Duration(1);
-            }
-
-            timer.Start();
-
-            using (var g = Graphics.FromImage(currentFrame))
-            {
-                CreateNextFrame(g);
-                DrawFPS(g);
-            }
-
-            e.Graphics.DrawImage(currentFrame, ClientRectangle);
-
-            Invalidate();
-        }
-
-        private void CreateNextFrame(Graphics g)
-        {
+        private void OnApplicationIdle()
+        {          
             game.Update();
 
-            g.Clear(game.BackgroundColor);
-            game.Draw(g);
+            Render();
         }
 
-        private void DrawFPS(Graphics g)
+        private void Render()
         {
-            if (game.ShowFramesPerSecond)
-            {
-                double framesPerSecond = Math.Round(1000000000 / timeToRenderFrame, 2, MidpointRounding.AwayFromZero);
-                g.FillRectangle(new SolidBrush(Color.Black), 5, 5, 140, 22);
-                g.DrawString(String.Format("FPS: {0}", framesPerSecond), new Font("Arial", 16), new SolidBrush(Color.Yellow), new PointF(5, 5));
-            }
+            d2dRenderTarget.BeginDraw();
+            d2dRenderTarget.Clear(game.BackgroundColor);
+            game.Render(d2dRenderTarget);
+            d2dRenderTarget.Flush();
+            d2dRenderTarget.EndDraw();
         }
     }
 }

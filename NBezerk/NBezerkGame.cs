@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 using GameFramework;
+
+using SharpDX;
+using SharpDX.Direct2D1;
+using SharpDX.DXGI;
 
 namespace NBezerk
 {
@@ -14,26 +19,27 @@ namespace NBezerk
     {
         private NBezerkGameForm form;
 
-        Image player;
-        Point playerPosition = new Point(100, 100);
+        FPSRenderer fpsRenderer;
+
+        SharpDX.Direct2D1.Bitmap player;
+        DrawingPoint playerPosition = new DrawingPoint(100, 100);
         int playerFrame = 0;
         bool facingRight = true;
 
         private string maze;
 
-        SolidBrush wallBrush = new SolidBrush(Color.FromArgb(0, 0, 108));
+        SolidColorBrush wallBrush;
 
         public NBezerkGame()
         {
             form = new NBezerkGameForm(this);
+            form.Text = "NBezerk";
 
             form.KeyDown += new KeyEventHandler(KeyDownHandler);
             form.KeyUp += new KeyEventHandler(KeyUpHandler);
 
             UInt16 room = RandomNumberGenerator.GetRandomNumber(0);
             maze = MazeGenerator.GenerateMaze(room);
-
-            player = LoadImage("player.png");
         }
 
         bool[] isKeyPressed = new bool[Enum.GetNames(typeof(Keys)).Length];
@@ -48,64 +54,72 @@ namespace NBezerk
             isKeyPressed[(int)(e.KeyCode)] = false;
         }
 
-        public Size Resolution { get { return new Size(256, 224); } }
-        public Color BackgroundColor { get { return Color.Black; } }
-        public double MaxFrameRate { get { return 30; } }
+        public DrawingSize Resolution { get { return new DrawingSize(256, 224); } }
+        public Color4 BackgroundColor { get { return Color.Black; } }
+        public double MaxFrameRate { get { return 3000; } }
 
         public bool ShowFramesPerSecond { get; set; }
 
         public void Run()
         {
-            Application.Run(form);
+            form.Run();
         }
 
-        public void Draw(System.Drawing.Graphics g)
+        public void LoadContent(RenderTarget windowRenderTarget)
         {
-            DrawRoom(g);
-            DrawPlayer(g);
+            wallBrush = new SolidColorBrush(windowRenderTarget, new SharpDX.Color4(0, 0, 108, 255));
+            player = BitmapExtensions.LoadFromFile(windowRenderTarget, "NBezerk.Resources.player.png");
+            fpsRenderer = new FPSRenderer(this);
         }
 
-        void DrawRoom(Graphics g)
+        public void Render(RenderTarget renderTarget)
+        {
+            fpsRenderer.Render(renderTarget);
+            RenderRoom(renderTarget);
+            RenderPlayer(renderTarget);
+        }
+
+        void RenderRoom(RenderTarget windowRenderTarget)
         {
             // Draw top walls
-            g.FillRectangle(wallBrush, 4, 0, 99, 4);
-            g.FillRectangle(wallBrush, 152, 0, 99, 4);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 0, 4 + 99, 0 + 4), wallBrush);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(152, 0, 152 + 99, 0 + 4), wallBrush);
 
             // Draw bottom walls
-            g.FillRectangle(wallBrush, 4, 204, 99, 4);
-            g.FillRectangle(wallBrush, 152, 204, 99, 4);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 204, 4 + 99, 204 + 4), wallBrush);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(152, 204, 152 + 99, 204 + 4), wallBrush);
 
             // Draw left walls
-            g.FillRectangle(wallBrush, 4, 0, 4, 71);
-            g.FillRectangle(wallBrush, 4, 136, 4, 71);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 0, 4 + 4, 0 + 71), wallBrush);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 136, 4 + 4, 136 + 71), wallBrush);
 
             // Draw right walls
-            g.FillRectangle(wallBrush, 248, 0, 4, 71);
-            g.FillRectangle(wallBrush, 248, 136, 4, 71);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(248, 0, 248 + 4, 0 + 71), wallBrush);
+            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(248, 136, 248 + 4, 136 + 71), wallBrush);
 
             for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
-                Point pillarLocation = new Point(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
+                DrawingPoint pillarLocation = new DrawingPoint(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
 
                 char wallDirection = maze[pillarIndex];
 
-                Rectangle wallRectangle = new Rectangle();
-                wallRectangle.X = (wallDirection == 'W') ? pillarLocation.X - 52 : pillarLocation.X;
-                wallRectangle.Y = (wallDirection == 'N') ? pillarLocation.Y - 67 : pillarLocation.Y;
-                wallRectangle.Width = (wallDirection == 'N' || wallDirection == 'S') ? 4 : 52;
-                wallRectangle.Height = (wallDirection == 'N' || wallDirection == 'S') ? 71 : 4;
+                SharpDX.RectangleF wallRectangle = new SharpDX.RectangleF();
+                wallRectangle.Left = (wallDirection == 'W') ? pillarLocation.X - 52 : pillarLocation.X;
+                wallRectangle.Top = (wallDirection == 'N') ? pillarLocation.Y - 67 : pillarLocation.Y;
+                wallRectangle.Right = wallRectangle.Left + ((wallDirection == 'N' || wallDirection == 'S') ? 4 : 52);
+                wallRectangle.Bottom = wallRectangle.Top + ((wallDirection == 'N' || wallDirection == 'S') ? 71 : 4);
 
-                g.FillRectangle(wallBrush, wallRectangle);
+                windowRenderTarget.FillRectangle(wallRectangle, wallBrush);
             }
         }
 
-        void DrawPlayer(Graphics g)
+        void RenderPlayer(RenderTarget windowRenderTarget)
         {
-            Rectangle destRect = new Rectangle(playerPosition, new Size(8, 16));
-            Rectangle srcRect = new Rectangle(8 * playerFrame, 0, 8, 16);
-            g.DrawImage(player, destRect, srcRect, GraphicsUnit.Pixel);
-        }
-
+            SharpDX.RectangleF destinationRectangle = new SharpDX.RectangleF(playerPosition.X, playerPosition.Y, playerPosition.X + 8, playerPosition.Y + 16);
+            SharpDX.RectangleF sourceRectangle = new SharpDX.RectangleF(8 * playerFrame, 0, 8 * playerFrame + 8, 16);
+            windowRenderTarget.DrawBitmap(player, destinationRectangle, 1.0f, BitmapInterpolationMode.Linear, sourceRectangle);
+        }        
+        
         public void Update()
         {
             if (isKeyPressed[(int)(Keys.F11)])
@@ -156,14 +170,5 @@ namespace NBezerk
                 facingRight = true;
             }
         }
-
-        Image LoadImage(string imageFile)
-        {
-            var thisExe = System.Reflection.Assembly.GetExecutingAssembly();
-            string[] names = thisExe.GetManifestResourceNames();
-            System.IO.Stream file = thisExe.GetManifestResourceStream("NBezerk.Resources." + imageFile);
-            return Image.FromStream(file);
-        }
-
     }
 }
