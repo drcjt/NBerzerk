@@ -122,7 +122,7 @@ namespace NBezerk
         {
             GraphicsDevice.Clear(Color.Black);
 
-            Matrix scaleMatrix = Matrix.Identity; // Scaling(GraphicsDevice.Viewport.Width / Resolution.Width, GraphicsDevice.Viewport.Height / Resolution.Height, 1);
+            Matrix scaleMatrix = Matrix.Scaling(GraphicsDevice.Viewport.Width / Resolution.Width, GraphicsDevice.Viewport.Height / Resolution.Height, 1);
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scaleMatrix);
 
             RenderRoom();
@@ -148,34 +148,38 @@ namespace NBezerk
         void RenderRoom()
         {
             // Draw top walls
-            spriteBatch.DrawRectangle(new Rectangle(4, 0, 103, 4), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(4, 0, 104, 4), Color.Blue);
             spriteBatch.DrawRectangle(new Rectangle(152, 0, 251, 4), Color.Blue);
 
             // Draw bottom walls
-            spriteBatch.DrawRectangle(new Rectangle(4, 204, 4 + 99, 204 + 4), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(4, 204, 104, 204 + 4), Color.Blue);
             spriteBatch.DrawRectangle(new Rectangle(152, 204, 152 + 100, 204 + 4), Color.Blue);
 
             // Draw left walls
-            spriteBatch.DrawRectangle(new Rectangle(4, 0, 4 + 4, 0 + 71), Color.Blue);
-            spriteBatch.DrawRectangle(new Rectangle(4, 136, 4 + 4, 136 + 71), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(4, 0, 4 + 4, 0 + 71 + 1), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(4, 136, 4 + 4, 136 + 71 + 1), Color.Blue);
 
             // Draw right walls
-            spriteBatch.DrawRectangle(new Rectangle(248, 0, 248 + 4, 0 + 71), Color.Blue);
-            spriteBatch.DrawRectangle(new Rectangle(248, 136, 248 + 4, 136 + 71), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(248, 0, 248 + 4, 0 + 71 + 1), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(248, 136, 248 + 4, 136 + 71 + 1), Color.Blue);
 
             for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
-                DrawingPoint pillarLocation = new DrawingPoint(56 + (pillarIndex % 4) * 49, pillarIndex < 4 ? 68 : 136);
+                DrawingPoint pillarLocation = new DrawingPoint(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
 
                 char wallDirection = maze[pillarIndex];
 
                 Rectangle wallRectangle = new Rectangle();
-                wallRectangle.Left = (wallDirection == 'W') ? pillarLocation.X - 52 : pillarLocation.X;
-                wallRectangle.Top = (wallDirection == 'N') ? pillarLocation.Y - 67 : pillarLocation.Y;
+                wallRectangle.Left = (wallDirection == 'W') ? pillarLocation.X - 48 : pillarLocation.X;
+                wallRectangle.Top = (wallDirection == 'N') ? pillarLocation.Y - 68 : pillarLocation.Y;
                 wallRectangle.Right = wallRectangle.Left + ((wallDirection == 'N' || wallDirection == 'S') ? 4 : 52);
-                wallRectangle.Bottom = wallRectangle.Top + ((wallDirection == 'N' || wallDirection == 'S') ? 71 : 4);
+                wallRectangle.Bottom = wallRectangle.Top + ((wallDirection == 'N' || wallDirection == 'S') ? 72 : 4);
 
-                spriteBatch.DrawRectangle(new Rectangle(248, 136, 248 + 4, 136 + 71), Color.Blue);
+                // Walls drawn westwards don't include the starting pillar!
+                if (wallDirection == 'W')
+                {
+                    wallRectangle.Right -= 4;
+                }
 
                 spriteBatch.DrawRectangle(wallRectangle, Color.Blue);
             }
