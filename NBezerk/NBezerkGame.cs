@@ -6,160 +6,238 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-
-using GameFramework;
+using System.Diagnostics;
 
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.DirectInput;
 using SharpDX.DXGI;
+using SharpDX.Toolkit;
+using SharpDX.Toolkit.Graphics;
 
 namespace NBezerk
 {
-    public class NBezerkGame : IGame
+    public class NBezerkGame : Game
     {
-        private NBezerkGameForm form;
+        private GraphicsDeviceManager graphicsDeviceManager;
 
-        FPSRenderer fpsRenderer;
+        private PrimitiveBatch<VertexPositionColor> batch;
+        private SpriteBatch spriteBatch;
+        private BasicEffect effect;
+        private SpriteFont arial16BMFont;
 
-        SharpDX.Direct2D1.Bitmap player;
-        DrawingPoint playerPosition = new DrawingPoint(100, 100);
+        private Texture2D player;
+
+        private Keyboard keyboard;
+
+        private readonly Stopwatch fpsClock;
+        private int frameCount;
+        private string fpsText = "";
+
+        Bitmap font;
+        DrawingPoint playerPosition = new DrawingPoint(30, 99);
         int playerFrame = 0;
         bool facingRight = true;
 
-        private string maze;
+        int score = 1270;
 
-        SolidColorBrush wallBrush;
+        private string maze;
+        private UInt16 roomY = 49;
+        private UInt16 roomX = 83;
 
         public NBezerkGame()
         {
-            form = new NBezerkGameForm(this);
+            graphicsDeviceManager = new GraphicsDeviceManager(this);
+            Content.Resolvers.Add(new EmbeddedResourceResolver());
+
+            graphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+
+            keyboard = new Keyboard(new DirectInput());
+            keyboard.Acquire();
+            /*
             form.Text = "NBezerk";
+            form.Width = 256 * 2;
+            form.Height = 224 * 2;
+            */
 
-            form.KeyDown += new KeyEventHandler(KeyDownHandler);
-            form.KeyUp += new KeyEventHandler(KeyUpHandler);
+            GetMaze();
+            //UInt16 room = RandomNumberGenerator.GetRandomNumber(0);
+            //maze = MazeGenerator.GenerateMaze(room);
 
-            UInt16 room = RandomNumberGenerator.GetRandomNumber(0);
-            maze = MazeGenerator.GenerateMaze(room);
+            fpsClock = new Stopwatch();
         }
 
-        bool[] isKeyPressed = new bool[Enum.GetNames(typeof(Keys)).Length];
-
-        void KeyDownHandler(object sender, KeyEventArgs e)
+        private void GetMaze()
         {
-            isKeyPressed[(int)(e.KeyCode)] = true;
+            UInt16 roomNo = (UInt16)((roomY << 8) + roomX);
+            maze = MazeGenerator.GenerateMaze(roomNo);
         }
 
-        void KeyUpHandler(object sender, KeyEventArgs e)
+
+        protected override void LoadContent()
         {
-            isKeyPressed[(int)(e.KeyCode)] = false;
+            base.LoadContent();
+            batch = new PrimitiveBatch<VertexPositionColor>(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            effect = new BasicEffect(GraphicsDevice);
+
+            player = Content.Load<Texture2D>("NBezerk.Resources.player.png");
+
+            arial16BMFont = Content.Load<SpriteFont>("NBezerk.Resources.Arial16.tkfnt");
+        }
+
+        protected override void BeginRun()
+        {
+            // Starts the FPS clock
+            fpsClock.Start();
+            base.BeginRun();
+        }
+
+        protected override void Initialize()
+        {
+            Window.Title = "NBezerk";
+            IsMouseVisible = true;
+            Window.AllowUserResizing = true;
+            base.Initialize();
+
+            //(Window.NativeWindow as Form).Width = 256;
+            //(Window.NativeWindow as Form).Height = 224;
         }
 
         public DrawingSize Resolution { get { return new DrawingSize(256, 224); } }
-        public Color4 BackgroundColor { get { return Color.Black; } }
+        public Color BackgroundColor { get { return Color.Black; } }
         public double MaxFrameRate { get { return 3000; } }
 
         public bool ShowFramesPerSecond { get; set; }
 
-        public void Run()
+        /*
+        void RenderScore(RenderTarget renderTarget)
         {
-            form.Run();
+            string scoreAsText = String.Format("{0,6:#####0}", score);
+            RenderText(scoreAsText, renderTarget, new DrawingPoint(1, 213));
+        }
+        */
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+
+            Matrix scaleMatrix = Matrix.Identity; // Scaling(GraphicsDevice.Viewport.Width / Resolution.Width, GraphicsDevice.Viewport.Height / Resolution.Height, 1);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scaleMatrix);
+
+            RenderRoom();
+            RenderPlayer();
+
+            spriteBatch.End();
+
+            // Update the FPS text
+            frameCount++;
+            if (fpsClock.ElapsedMilliseconds > 1000.0f)
+            {
+                fpsText = string.Format("{0:F2} FPS", (float)frameCount * 1000 / fpsClock.ElapsedMilliseconds);
+                frameCount = 0;
+                fpsClock.Restart();
+            }
+
+            // Render the text
+            spriteBatch.Begin();
+            spriteBatch.DrawString(arial16BMFont, fpsText, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
         }
 
-        public void LoadContent(RenderTarget windowRenderTarget)
-        {
-            wallBrush = new SolidColorBrush(windowRenderTarget, new SharpDX.Color4(0, 0, 108, 255));
-            player = BitmapExtensions.LoadFromFile(windowRenderTarget, "NBezerk.Resources.player.png");
-            fpsRenderer = new FPSRenderer(this);
-        }
-
-        public void Render(RenderTarget renderTarget)
-        {
-            fpsRenderer.Render(renderTarget);
-            RenderRoom(renderTarget);
-            RenderPlayer(renderTarget);
-        }
-
-        void RenderRoom(RenderTarget windowRenderTarget)
+        void RenderRoom()
         {
             // Draw top walls
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 0, 4 + 99, 0 + 4), wallBrush);
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(152, 0, 152 + 99, 0 + 4), wallBrush);
+            spriteBatch.DrawRectangle(new Rectangle(4, 0, 103, 4), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(152, 0, 251, 4), Color.Blue);
 
             // Draw bottom walls
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 204, 4 + 99, 204 + 4), wallBrush);
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(152, 204, 152 + 99, 204 + 4), wallBrush);
+            spriteBatch.DrawRectangle(new Rectangle(4, 204, 4 + 99, 204 + 4), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(152, 204, 152 + 100, 204 + 4), Color.Blue);
 
             // Draw left walls
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 0, 4 + 4, 0 + 71), wallBrush);
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(4, 136, 4 + 4, 136 + 71), wallBrush);
+            spriteBatch.DrawRectangle(new Rectangle(4, 0, 4 + 4, 0 + 71), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(4, 136, 4 + 4, 136 + 71), Color.Blue);
 
             // Draw right walls
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(248, 0, 248 + 4, 0 + 71), wallBrush);
-            windowRenderTarget.FillRectangle(new SharpDX.RectangleF(248, 136, 248 + 4, 136 + 71), wallBrush);
+            spriteBatch.DrawRectangle(new Rectangle(248, 0, 248 + 4, 0 + 71), Color.Blue);
+            spriteBatch.DrawRectangle(new Rectangle(248, 136, 248 + 4, 136 + 71), Color.Blue);
 
             for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
-                DrawingPoint pillarLocation = new DrawingPoint(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
+                DrawingPoint pillarLocation = new DrawingPoint(56 + (pillarIndex % 4) * 49, pillarIndex < 4 ? 68 : 136);
 
                 char wallDirection = maze[pillarIndex];
 
-                SharpDX.RectangleF wallRectangle = new SharpDX.RectangleF();
+                Rectangle wallRectangle = new Rectangle();
                 wallRectangle.Left = (wallDirection == 'W') ? pillarLocation.X - 52 : pillarLocation.X;
                 wallRectangle.Top = (wallDirection == 'N') ? pillarLocation.Y - 67 : pillarLocation.Y;
                 wallRectangle.Right = wallRectangle.Left + ((wallDirection == 'N' || wallDirection == 'S') ? 4 : 52);
                 wallRectangle.Bottom = wallRectangle.Top + ((wallDirection == 'N' || wallDirection == 'S') ? 71 : 4);
 
-                windowRenderTarget.FillRectangle(wallRectangle, wallBrush);
+                spriteBatch.DrawRectangle(new Rectangle(248, 136, 248 + 4, 136 + 71), Color.Blue);
+
+                spriteBatch.DrawRectangle(wallRectangle, Color.Blue);
             }
         }
 
-        void RenderPlayer(RenderTarget windowRenderTarget)
+        void RenderPlayer()
         {
-            SharpDX.RectangleF destinationRectangle = new SharpDX.RectangleF(playerPosition.X, playerPosition.Y, playerPosition.X + 8, playerPosition.Y + 16);
-            SharpDX.RectangleF sourceRectangle = new SharpDX.RectangleF(8 * playerFrame, 0, 8 * playerFrame + 8, 16);
-            windowRenderTarget.DrawBitmap(player, destinationRectangle, 1.0f, BitmapInterpolationMode.Linear, sourceRectangle);
+            Rectangle destinationRectangle = new Rectangle(playerPosition.X, playerPosition.Y, playerPosition.X + 7, playerPosition.Y + 15);
+            Rectangle sourceRectangle = new Rectangle(8 * playerFrame, 0, 8 * playerFrame + 7, 15);
+
+            spriteBatch.Draw(player, destinationRectangle, sourceRectangle, Color.White, 0.0f, Vector2.One, SpriteEffects.None, 0f);
         }        
         
-        public void Update()
+        protected override void Update(GameTime gameTime)
         {
-            if (isKeyPressed[(int)(Keys.F11)])
+            var keyboardState = keyboard.GetCurrentState();
+
+            if (keyboardState.IsPressed(Key.F11))
             {
                 ShowFramesPerSecond = !ShowFramesPerSecond;
             }
 
-            if (isKeyPressed[(int)(Keys.Up)])
+            if (gameTime.FrameCount % 2 == 0)
             {
-                playerPosition.Y = playerPosition.Y - 1;
-            }
-            if (isKeyPressed[(int)(Keys.Down)])
-            {
-                playerPosition.Y = playerPosition.Y + 1;
-            }
-            if (isKeyPressed[(int)(Keys.Left)])
-            {
-                if (facingRight && playerFrame < 5)
+
+                if (keyboardState.IsPressed(Key.UpArrow))
                 {
-                    playerFrame = 5;
-                    facingRight = false;
+                    playerPosition.Y = playerPosition.Y - 1;
                 }
-                playerPosition.X = playerPosition.X - 1;
-            }
-            if (isKeyPressed[(int)(Keys.Right)])
-            {
-                if (!facingRight && playerFrame > 4)
+                if (keyboardState.IsPressed(Key.Down))
                 {
-                    playerFrame = 0;
-                    facingRight = true;
+                    playerPosition.Y = playerPosition.Y + 1;
                 }
-                playerPosition.X = playerPosition.X + 1;
+                if (keyboardState.IsPressed(Key.Left))
+                {
+                    if (facingRight && playerFrame < 5)
+                    {
+                        playerFrame = 5;
+                        facingRight = false;
+                    }
+                    playerPosition.X = playerPosition.X - 1;
+                }
+                if (keyboardState.IsPressed(Key.Right))
+                {
+                    if (!facingRight && playerFrame > 4)
+                    {
+                        playerFrame = 0;
+                        facingRight = true;
+                    }
+                    playerPosition.X = playerPosition.X + 1;
+                }
             }
 
-            if (isKeyPressed[(int)(Keys.Up)] || isKeyPressed[(int)(Keys.Down)] ||
-                isKeyPressed[(int)(Keys.Left)] || isKeyPressed[(int)(Keys.Right)])
+            if (keyboardState.IsPressed(Key.UpArrow) || keyboardState.IsPressed(Key.Down) ||
+                keyboardState.IsPressed(Key.Left) || keyboardState.IsPressed(Key.Right))
             {
-                playerFrame++;
+                if (gameTime.FrameCount % 5 == 0)
+                {
+                    playerFrame++;
+                }
 
-                if (playerFrame % 4 == 0)
+                if (playerFrame > 0 && playerFrame % 4 == 0)
                 {
                     playerFrame = playerFrame - 4;
                 }
@@ -168,6 +246,35 @@ namespace NBezerk
             {
                 playerFrame = 0;
                 facingRight = true;
+            }
+
+            bool changeRoom = false;
+            if (playerPosition.Y == 0)
+            {
+                roomY--;
+                changeRoom = true;
+            }
+            if (playerPosition.X == 0)
+            {
+                roomX--;
+                changeRoom = true;
+            }
+            if (playerPosition.X == 256 - 8)
+            {
+                roomX++;
+                changeRoom = true;
+            }
+            if (playerPosition.Y == 192)
+            {
+                roomY++;
+                changeRoom = true;
+            }
+
+            if (changeRoom)
+            {
+                GetMaze();
+                playerPosition.X = 30;
+                playerPosition.Y = 99;
             }
         }
     }
