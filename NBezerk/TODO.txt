@@ -28,3 +28,36 @@
 7. Is it possible to write unit tests for directx code?? See here for possible option:
 
      http://sharpdx.org/forum/5-api-usage/3221-toolkit-win8-desktop#3279
+
+8. Room dimensions:
+
+	Top left wall:		(4, 0) - (103, 3)
+	Top right wall:		(152, 0) - (251, 3)
+	Bottom left wall:	(4, 204) - (103, 207)
+	Bottom right wall:	(152, 204) - (251, 207)
+
+	Left top wall:		(4, 0) - (7, 71)
+	Left bottom wall:	(4, 136) - (7, 207)
+	Right top wall:		(248, 0) - (251, 71)
+	Right bottom wall:	(248, 136) - (251, 107)
+
+	Pillars:
+
+		Top row (left to right)
+	
+			Pillar 1:		(56, 68) - (59, 71)
+			Pillar 2:		(104, 68) - (107, 71)
+			Pillar 3:		(152, 68) - (155, 71)
+			Pillar 4:		(200, 68) - (203, 71)
+
+		Bottom row (left to right)
+
+			Pillar 5:		(56, 136) - (59, 139)
+			Pillar 6:		(104, 136) - (107, 139)
+			Pillar 7:		(152, 136) - (155, 139)
+			Pillar 8:		(200, 136) - (203, 139)
+
+		Drawing north from pillar includes starting pillar & ending pillar
+		Drawing south from pillar includes starting pillar & ending pillar
+		Drawing east from pillar does not include starting pillar
+		Drawing west from pillar includes starting pillar & ending pillar
