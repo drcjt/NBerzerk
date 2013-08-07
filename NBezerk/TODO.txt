@@ -1,35 +1,41 @@
-﻿0. Look into using SharpDX.Toolkit's high level game API - is this only for 3d or will it work for 2d too? Note this is not cross platform.
+﻿* Use GameObjects like here:
 
-1. Create custom font (ttf) and use DirectWrite to draw text. See example in SharpDX:
+	http://www.dreamincode.net/forums/topic/180069-xna-2d-bounding-box-collision-detection/
+
+  for everything - this should then allow collision detection without actually having a proper pixel buffer.
+
+* Look into using SharpDX.Toolkit's high level game API - is this only for 3d or will it work for 2d too? Note this is not cross platform.
+
+* Create custom font (ttf) and use DirectWrite to draw text. See example in SharpDX:
 
 	https://code.google.com/p/sharpdx/source/browse/Samples/DirectWrite/?r=7df82ec58c8b7706300f3dd1e5f6b5a4c2ffd335#DirectWrite%2FCustomFont
 
-   hmm - maybe need to use spritefont instead, see here:
+  hmm - maybe need to use spritefont instead, see here:
 
    https://code.google.com/p/sharpdx/source/browse/Samples/Toolkit/SpriteBatchAndFont/SpriteBatchAndFontGame.cs?r=0bbba8530ce07845d296653d675c597adc08e70a
 
-   See here for bitmap font format:
+  See here for bitmap font format:
 
    http://directxtk.codeplex.com/wikipage?title=MakeSpriteFont&referringTitle=SpriteFont
 
-   I think I need to redo font.png into this format
+  I think I need to redo font.png into this format
 
-2. Create class for main game objects, e.g. player, room, robots, etc... and refactor existing code into these classes. Classes will need a 
-   Render method, maybe an Update method too?? Main game will just delegate to these objects to Render/Update.
+* Create class for main game objects, e.g. player, room, robots, etc... and refactor existing code into these classes. Classes will need a 
+  Render method, maybe an Update method too?? Main game will just delegate to these objects to Render/Update.
 
-3. Learn what the heck WIC is in directX.
+* Learn what the heck WIC is in directX.
 
-4. Is there going to be a lot of changes when next release of SharpDX is released, e.g. DrawingPoint class is renamed as Point etc...
+* Is there going to be a lot of changes when next release of SharpDX is released, e.g. DrawingPoint class is renamed as Point etc...
 
-5. Need to work out how input works in DX
+* Need to work out how input works in DX
 
-6. Need to work out how to do pixel based collision detection
+* Need to work out how to do pixel based collision detection
 
-7. Is it possible to write unit tests for directx code?? See here for possible option:
+* Is it possible to write unit tests for directx code?? See here for possible option:
 
      http://sharpdx.org/forum/5-api-usage/3221-toolkit-win8-desktop#3279
 
-8. Room dimensions:
+* Room dimensions:
 
 	Top left wall:		(4, 0) - (103, 3)
 	Top right wall:		(152, 0) - (251, 3)
