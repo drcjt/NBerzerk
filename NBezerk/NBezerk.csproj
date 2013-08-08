@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmbeddedResourceResolver.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="MazeGenerator.cs" />
     <Compile Include="NBezerk.cs" />
     <Compile Include="NBezerkGame.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomNumberGenerator.cs" />
     <Compile Include="SpriteBatchHelper.cs" />
+    <Compile Include="WallObject.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -159,6 +161,7 @@
     <Content Include="Research\CharacterSet\g.jpg" />
     <Content Include="Research\CharacterSet\High.jpg" />
     <Content Include="Research\OffsetWalls.jpg" />
+    <Compile Include="RoomObject.cs" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup />
