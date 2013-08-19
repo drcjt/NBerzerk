@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using GameFramework;
-
 namespace NBezerk
 {
     static class NBezerk

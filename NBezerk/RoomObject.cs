@@ -45,15 +45,15 @@ namespace NBezerk
 
                 char wallDirection = Maze[pillarIndex];
 
-                mazeWalls[pillarIndex].Left = (wallDirection == 'W') ? pillarLocation.X - 48 : pillarLocation.X;
-                mazeWalls[pillarIndex].Top = (wallDirection == 'N') ? pillarLocation.Y - 68 : pillarLocation.Y;
-                mazeWalls[pillarIndex].Width = (wallDirection == 'N' || wallDirection == 'S') ? 4 : 52;
-                mazeWalls[pillarIndex].Height = (wallDirection == 'N' || wallDirection == 'S') ? 72 : 4;
+                mazeWalls[pillarIndex].Position.X = (wallDirection == 'W') ? pillarLocation.X - 48 : pillarLocation.X;
+                mazeWalls[pillarIndex].Position.Y = (wallDirection == 'N') ? pillarLocation.Y - 68 : pillarLocation.Y;
+                mazeWalls[pillarIndex].Size.X = (wallDirection == 'N' || wallDirection == 'S') ? 4 : 52;
+                mazeWalls[pillarIndex].Size.Y = (wallDirection == 'N' || wallDirection == 'S') ? 72 : 4;
 
                 // Walls drawn westwards don't include the starting pillar!
                 if (wallDirection == 'W')
                 {
-                    mazeWalls[pillarIndex].Width -= 4;
+                    mazeWalls[pillarIndex].Size.X -= 4;
                 }
             }
         }
