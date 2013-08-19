@@ -9,7 +9,7 @@ using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.DirectInput;
 
-namespace NBezerk
+namespace NBerzerk
 {
     public class GameObject
     {

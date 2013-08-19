@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NBezerk
+namespace NBerzerk
 {
-    static class NBezerk
+    static class NBerzerk
     {
         /// <summary>
         /// The main entry point for the application.
@@ -14,7 +14,7 @@ namespace NBezerk
         [STAThread]
         static void Main()
         {
-            NBezerkGame game = new NBezerkGame();
+            NBerzerkGame game = new NBerzerkGame();
             game.Run();
         }
     }

@@ -10,7 +10,7 @@ using SharpDX.DirectInput;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 
-namespace NBezerk
+namespace NBerzerk
 {
     public class FPSObject : GameObject
     {

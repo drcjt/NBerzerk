@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NBezerk
+namespace NBerzerk
 {
     public class MazeGenerator
     {
         /// <summary>
-        /// Generate a bezerk maze based on a room's coordinates
+        /// Generate a berzerk maze based on a room's coordinates
         /// </summary>
         /// <param name="room">room's coordinates as unsigned 16 bit number, top 8 bits = </param>
         /// <returns></returns>

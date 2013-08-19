@@ -8,7 +8,7 @@ using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Content;
 
-namespace NBezerk
+namespace NBerzerk
 {
     public class EmbeddedResourceResolver : IContentResolver
     {

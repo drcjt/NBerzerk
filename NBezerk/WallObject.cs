@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Toolkit.Graphics;
 
-namespace NBezerk
+namespace NBerzerk
 {
     public class WallObject : GameObject
     {

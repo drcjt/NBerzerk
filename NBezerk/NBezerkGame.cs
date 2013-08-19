@@ -14,9 +14,9 @@ using SharpDX.DXGI;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 
-namespace NBezerk
+namespace NBerzerk
 {
-    public class NBezerkGame : Game
+    public class NBerzerkGame : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
 
@@ -39,7 +39,7 @@ namespace NBezerk
 
         bool contentLoaded = false;
 
-        public NBezerkGame()
+        public NBerzerkGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.Resolvers.Add(new EmbeddedResourceResolver());
@@ -68,8 +68,8 @@ namespace NBezerk
                 spriteBatch = new SpriteBatch(GraphicsDevice);
                 effect = new BasicEffect(GraphicsDevice);
 
-                playerObject = new PlayerObject(Content.Load<Texture2D>("NBezerk.Resources.player.png"));
-                fpsObject = new FPSObject(Content.Load<SpriteFont>("NBezerk.Resources.Arial16.tkfnt"));
+                playerObject = new PlayerObject(Content.Load<Texture2D>("NBerzerk.Resources.player.png"));
+                fpsObject = new FPSObject(Content.Load<SpriteFont>("NBerzerk.Resources.Arial16.tkfnt"));
 
                 contentLoaded = true;
             }
@@ -84,7 +84,7 @@ namespace NBezerk
 
         protected override void Initialize()
         {
-            Window.Title = "NBezerk";
+            Window.Title = "NBerzerk";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
             base.Initialize();
