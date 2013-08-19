@@ -26,10 +26,6 @@ namespace NBerzerk
 
         private Keyboard keyboard;
 
-        //Bitmap font;
-        int score = 1270;
-
-        private string maze;
         private UInt16 roomY = 49;
         private UInt16 roomX = 83;
 

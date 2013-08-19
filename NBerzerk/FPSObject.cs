@@ -14,7 +14,7 @@ namespace NBerzerk
 {
     public class FPSObject : GameObject
     {
-        private SpriteFont arial16BMFont;
+        private SpriteFont fpsFont;
         public readonly Stopwatch fpsClock;
         private string fpsText = "";
         private int frameCount = 0;
@@ -22,7 +22,7 @@ namespace NBerzerk
 
         public FPSObject(SpriteFont fpsFont)
         {
-            this.arial16BMFont = fpsFont;
+            this.fpsFont = fpsFont;
             fpsClock = new Stopwatch();
         }
 
@@ -41,7 +41,7 @@ namespace NBerzerk
             spriteBatch.Begin();
             if (ShowFramesPerSecond)
             {
-                spriteBatch.DrawString(arial16BMFont, fpsText, new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(fpsFont, fpsText, new Vector2(0, 0), Color.White);
             }
             spriteBatch.End();
         }
