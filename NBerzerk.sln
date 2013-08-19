@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBerzerk", "NBezerk\NBerzerk.csproj", "{1949D942-9252-4E49-B7EF-30FDB61BF419}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBerzerk", "NBerzerk\NBerzerk.csproj", "{1949D942-9252-4E49-B7EF-30FDB61BF419}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameFramework", "GameFramework\GameFramework.csproj", "{CD9B734C-1B23-4381-9212-2589360093D4}"
 EndProject
