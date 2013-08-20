@@ -10,16 +10,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5BC74B
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixproj", "{C453E213-D1FC-41E8-911A-FA776EF6752B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1949D942-9252-4E49-B7EF-30FDB61BF419}.Release|x86.ActiveCfg = Release|Any CPU
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Debug|x86.ActiveCfg = Debug|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Debug|x86.Build.0 = Debug|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Release|Any CPU.ActiveCfg = Release|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Release|x86.ActiveCfg = Release|x86
+		{C453E213-D1FC-41E8-911A-FA776EF6752B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
