@@ -4,6 +4,8 @@
 
   for everything - this should then allow collision detection without actually having a proper pixel buffer.
 
+* Unit testing?
+
 * Look into using SharpDX.Toolkit's high level game API - is this only for 3d or will it work for 2d too? Note this is not cross platform.
 
 * Create custom font (ttf) and use DirectWrite to draw text. See example in SharpDX:
