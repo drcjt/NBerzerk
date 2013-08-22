@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="NBerzerk" Language="1033" Version="1.0.0.0" Manufacturer="CJTSoft" UpgradeCode="bf70ea9d-e53c-447a-9a45-7929b6025dda">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+
+		<Feature Id="ProductFeature" Title="NBerzerk" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="NBerzerk" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+      <Component Id="MainExecutable">
+        <File Id="NBezerkEXE" Name="$(var.NBerzerk.TargetFileName)" Source="$(var.NBerzerk.TargetPath)"/>
+      </Component>
+      <Component Id="SharpDX" Guid="{1E39F6DB-9B80-4DE2-B78C-B1DD3EA50C97}">
+        <File Name="SharpDX.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.DXGI.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.Toolkit.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.Toolkit.Game.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.Toolkit.Graphics.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.DirectInput.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.Direct2D1.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.Direct3D11.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.D3DCompiler.dll" Source="$(var.NBerzerk.TargetDir)"/>
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

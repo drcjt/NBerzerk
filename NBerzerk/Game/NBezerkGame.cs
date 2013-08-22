@@ -41,6 +41,7 @@ namespace NBerzerk
             Content.Resolvers.Add(new EmbeddedResourceResolver());
 
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
 
             keyboard = new Keyboard(new DirectInput());
             keyboard.Acquire();
