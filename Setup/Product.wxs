@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" Name="NBerzerk" Language="1033" Version="1.0.0.0" Manufacturer="CJTSoft" UpgradeCode="bf70ea9d-e53c-447a-9a45-7929b6025dda">
+
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -9,7 +10,13 @@
 		<Feature Id="ProductFeature" Title="NBerzerk" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
-	</Product>
+
+    <Property Id="WIXUI_INSTALLDIR">INSTALLFOLDER</Property>
+    <UIRef Id="WixUI_InstallDir"/>
+    <WixVariable Id="WixUIBannerBmp" Value="Banner.jpg"/>
+    <WixVariable Id="WixUIDialogBmp" Value="Welcome.jpg"/>
+
+  </Product>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
