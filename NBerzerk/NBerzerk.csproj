@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\EmbeddedResourceResolver.cs" />
+    <Compile Include="GameObjects\AnimatedObject.cs" />
     <Compile Include="GameObjects\FPSObject.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="MazeGenerator.cs" />

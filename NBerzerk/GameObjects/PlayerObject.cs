@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using SharpDX;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.DirectInput;
 
@@ -17,9 +18,9 @@ namespace NBerzerk
         private bool facingRight = true;
         Texture2D playerTexture;
 
-        public PlayerObject(Texture2D playerTexture)
+        public override void LoadContent(IContentManager mgr)
         {
-            this.playerTexture = playerTexture;
+            playerTexture = mgr.Load<Texture2D>("NBerzerk.Resources.player.png");
         }
 
         public override void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)

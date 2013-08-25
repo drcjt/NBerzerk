@@ -8,6 +8,7 @@ using System.Diagnostics;
 using SharpDX;
 using SharpDX.DirectInput;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 
 namespace NBerzerk
@@ -15,15 +16,14 @@ namespace NBerzerk
     public class FPSObject : GameObject
     {
         private SpriteFont fpsFont;
-        public readonly Stopwatch fpsClock;
+        public readonly Stopwatch fpsClock = new Stopwatch();
         private string fpsText = "";
         private int frameCount = 0;
         public bool ShowFramesPerSecond { get; set; }
 
-        public FPSObject(SpriteFont fpsFont)
+        public override void LoadContent(IContentManager mgr)
         {
-            this.fpsFont = fpsFont;
-            fpsClock = new Stopwatch();
+            fpsFont = mgr.Load<SpriteFont>("NBerzerk.Resources.Arial16.tkfnt");
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -38,12 +38,10 @@ namespace NBerzerk
             }
 
             // Render the text
-            spriteBatch.Begin();
             if (ShowFramesPerSecond)
             {
                 spriteBatch.DrawString(fpsFont, fpsText, new Vector2(0, 0), Color.White);
             }
-            spriteBatch.End();
         }
 
         public override void Update(GameTime gameTime, SharpDX.DirectInput.KeyboardState keyboardState)

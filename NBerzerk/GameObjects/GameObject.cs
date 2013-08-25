@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using SharpDX;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.DirectInput;
 
@@ -35,6 +36,10 @@ namespace NBerzerk
         }
 
         virtual public void Update(GameTime gameTime, KeyboardState keyboardState)
+        {
+        }
+
+        virtual public void LoadContent(IContentManager mgr)
         {
         }
     }

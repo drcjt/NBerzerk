@@ -30,8 +30,8 @@ namespace NBerzerk
         private UInt16 roomX = 83;
 
         private RoomObject roomObject = new RoomObject();
-        private PlayerObject playerObject;
-        private FPSObject fpsObject;
+        private PlayerObject playerObject = new PlayerObject();
+        private FPSObject fpsObject = new FPSObject();
 
         bool contentLoaded = false;
 
@@ -41,7 +41,7 @@ namespace NBerzerk
             Content.Resolvers.Add(new EmbeddedResourceResolver());
 
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
 
             keyboard = new Keyboard(new DirectInput());
             keyboard.Acquire();
@@ -65,8 +65,8 @@ namespace NBerzerk
                 spriteBatch = new SpriteBatch(GraphicsDevice);
                 effect = new BasicEffect(GraphicsDevice);
 
-                playerObject = new PlayerObject(Content.Load<Texture2D>("NBerzerk.Resources.player.png"));
-                fpsObject = new FPSObject(Content.Load<SpriteFont>("NBerzerk.Resources.Arial16.tkfnt"));
+                playerObject.LoadContent(Content);
+                fpsObject.LoadContent(Content);
 
                 contentLoaded = true;
             }
@@ -87,11 +87,6 @@ namespace NBerzerk
             base.Initialize();
         }
 
-        public DrawingSize Resolution { get { return new DrawingSize(256, 224); } }
-        public Color BackgroundColor { get { return Color.Black; } }
-        public double MaxFrameRate { get { return 3000; } }
-
-        public bool ShowFramesPerSecond { get; set; }
 
         /*
         void RenderScore(RenderTarget renderTarget)
@@ -106,14 +101,13 @@ namespace NBerzerk
             GraphicsDevice.Clear(Color.Black);
 
             Matrix scaleMatrix = Matrix.Scaling(GraphicsDevice.Viewport.Width / Resolution.Width, GraphicsDevice.Viewport.Height / Resolution.Height, 1);
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, scaleMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.NonPremultiplied, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
 
             roomObject.Draw(spriteBatch);
             playerObject.Draw(spriteBatch);
+            fpsObject.Draw(spriteBatch);
 
             spriteBatch.End();
-
-            fpsObject.Draw(spriteBatch);
         }
         
         protected override void Update(GameTime gameTime)
