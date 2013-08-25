@@ -48,6 +48,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>NBerzerk.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="SharpDX">
       <HintPath>..\packages\SharpDX.2.4.2\lib\net40\SharpDX.dll</HintPath>
@@ -150,6 +154,7 @@
     <EmbeddedResource Include="Resources\font.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="NBerzerk.ico" />
     <Content Include="Research\CharacterSet\A.jpg" />
     <Content Include="Research\CharacterSet\c.jpg" />
     <Content Include="Research\CharacterSet\Copyright.jpg" />

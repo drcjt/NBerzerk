@@ -84,6 +84,8 @@ namespace NBerzerk
             Window.Title = "NBerzerk";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
+            (this.Window.NativeWindow as Form).Icon = new System.Drawing.Icon(this.GetType(), "NBerzerk.ico");
+
             base.Initialize();
         }
 
