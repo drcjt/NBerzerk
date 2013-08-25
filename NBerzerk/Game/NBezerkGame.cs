@@ -87,6 +87,7 @@ namespace NBerzerk
             base.Initialize();
         }
 
+        public DrawingSize Resolution { get { return new DrawingSize(256, 224); } }
 
         /*
         void RenderScore(RenderTarget renderTarget)
