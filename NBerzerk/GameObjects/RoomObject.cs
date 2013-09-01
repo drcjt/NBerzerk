@@ -72,22 +72,22 @@ namespace NBerzerk
             if (ClosedDoor == 'W')
             {
                 doorWall.MoveTo(new Vector2(5, 72));
-                doorWall.Size = new Vector2(2, 63);
+                doorWall.Size = new Vector2(2, 64);
             }
             else if (closedDoor == 'E')
             {
                 doorWall.MoveTo(new Vector2(249, 72));
-                doorWall.Size = new Vector2(2, 63);
+                doorWall.Size = new Vector2(2, 64);
             }
             else if (closedDoor == 'N')
             {
                 doorWall.MoveTo(new Vector2(104, 1));
-                doorWall.Size = new Vector2(47, 2);
+                doorWall.Size = new Vector2(48, 2);
             }
             else if (closedDoor == 'S')
             {
                 doorWall.MoveTo(new Vector2(104, 205));
-                doorWall.Size = new Vector2(47, 2);
+                doorWall.Size = new Vector2(48, 2);
             }
             else
             {
