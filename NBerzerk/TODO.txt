@@ -1,4 +1,10 @@
-﻿* Look into backing up sourceforge as described here:
+﻿When player collides with wall in first original room (251, 123) then player restarts
+in room with maze walls like (NNWE,NE?W), this appears to be room (??, 179). Going left
+from this room leads to a room with maze walls (NWNW,SENE) which appears to be room (??, 178).
+There are 64 possibilities for these rooms!!
+
+
+* Look into backing up sourceforge as described here:
 
 	http://software.ac.uk/resources/guides/creating-and-managing-sourceforge-projects
 

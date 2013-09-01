@@ -24,7 +24,7 @@ namespace NBerzerk
         private SpriteBatch spriteBatch;
         private BasicEffect effect;
 
-        private Keyboard keyboard;
+        static public Keyboard keyboard;
 
         private UInt16 roomY = 49;
         private UInt16 roomX = 83;
@@ -86,6 +86,8 @@ namespace NBerzerk
             Window.AllowUserResizing = true;
             (this.Window.NativeWindow as Form).Icon = new System.Drawing.Icon(this.GetType(), "NBerzerk.ico");
 
+            (this.Window.NativeWindow as Form).Size = new System.Drawing.Size(256 * 3, 224 * 3);
+
             base.Initialize();
         }
 
@@ -108,8 +110,11 @@ namespace NBerzerk
 
             roomObject.Draw(spriteBatch);
             playerObject.Draw(spriteBatch);
-            fpsObject.Draw(spriteBatch);
 
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+            fpsObject.Draw(spriteBatch);
             spriteBatch.End();
         }
         
@@ -117,37 +122,59 @@ namespace NBerzerk
         {
             var keyboardState = keyboard.GetCurrentState();
 
-            fpsObject.Update(gameTime, keyboardState);
+            fpsObject.Update(gameTime);
 
-            playerObject.Update(gameTime, keyboardState);
+            playerObject.Update(gameTime);
+
 
             bool changeRoom = false;
+
+            // Check if player has collided with wall
+            if (roomObject.Intersects(playerObject.BoundingBox))
+            {
+                playerObject.Electrocuting = true;
+            }
+
+            if (playerObject.Electrocuting && playerObject.electrocutionFrame > 22)
+            {
+                playerObject.Electrocuting = false;
+                playerObject.electrocutionFrame = 0;
+                changeRoom = true;
+                playerObject.MoveTo(new Vector2(30, 99));
+            }
+
             if (playerObject.Position.Y == 0)
             {
                 roomY--;
                 changeRoom = true;
+                playerObject.MoveTo(new Vector2(128, 184));
+                roomObject.ClosedDoor = 'S';
             }
             if (playerObject.Position.X == 0)
             {
                 roomX--;
                 changeRoom = true;
+                playerObject.MoveTo(new Vector2(230, 99));
+                roomObject.ClosedDoor = 'E';
             }
             if (playerObject.Position.X == 256 - 8)
             {
                 roomX++;
                 changeRoom = true;
+                playerObject.MoveTo(new Vector2(8, 93));
+                roomObject.ClosedDoor = 'W';
             }
             if (playerObject.Position.Y == 192)
             {
                 roomY++;
                 changeRoom = true;
+                playerObject.MoveTo(new Vector2(125, 5));
+                roomObject.ClosedDoor = 'N';
             }            
 
             if (changeRoom)
             {
                 GetMaze();
-                playerObject.Position.X = 30;
-                playerObject.Position.Y = 99;
             }
         }
     }

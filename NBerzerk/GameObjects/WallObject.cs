@@ -7,25 +7,29 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Toolkit.Graphics;
 
+using NBerzerk.ComponentFramework;
+
 namespace NBerzerk
 {
-    public class WallObject : GameObject
+    public class WallObject : GameObject, IPositionable
     {
+        public Color Color { get; set; }
+
         public WallObject()
         {
+            Color = new Color(0, 0, 108, 255);
         }
 
         public WallObject(int left, int top, int width, int height)
         {
-            Position.X = left;
-            Position.Y = top;
-            Size.X = width;
-            Size.Y = height;
+            Color = new Color(0, 0, 108, 255);
+            Position = new Vector2(left, top);
+            Size = new Vector2(width, height);
         }
 
-        public override void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
+        public void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(BoundingBox, Color.Blue);
+            spriteBatch.DrawRectangle(BoundingBox, Color);
         }
     }
 }

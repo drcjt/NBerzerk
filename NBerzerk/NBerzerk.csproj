@@ -94,9 +94,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\EmbeddedResourceResolver.cs" />
-    <Compile Include="GameObjects\AnimatedObject.cs" />
+    <Compile Include="Common\RectangleExtensions.cs" />
+    <Compile Include="ComponentFramework\AnimatedObject.cs" />
     <Compile Include="GameObjects\FPSObject.cs" />
-    <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="ComponentFramework\GameObject.cs" />
+    <Compile Include="ComponentFramework\IGameObject.cs" />
+    <Compile Include="ComponentFramework\IMovable.cs" />
+    <Compile Include="ComponentFramework\IPositionable.cs" />
+    <Compile Include="ComponentFramework\ISizable.cs" />
     <Compile Include="MazeGenerator.cs" />
     <Compile Include="Game\NBezerk.cs" />
     <Compile Include="Game\NBezerkGame.cs" />
@@ -162,6 +167,7 @@
     <Content Include="Research\CharacterSet\High.jpg" />
     <Content Include="Research\OffsetWalls.jpg" />
     <Compile Include="GameObjects\RoomObject.cs" />
+    <Content Include="Resources\player_explosion.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup />

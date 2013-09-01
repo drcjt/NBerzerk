@@ -10,77 +10,127 @@ using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.DirectInput;
 
+using NBerzerk.ComponentFramework;
+
 namespace NBerzerk
 {
-    public class PlayerObject : GameObject
+    public class PlayerObject : AnimatedObject
     {
-        private int frame = 0;
         private bool facingRight = true;
-        Texture2D playerTexture;
 
-        public override void LoadContent(IContentManager mgr)
+        public bool Electrocuting { get; set; }
+
+        public int electrocutionFrame = 0;
+
+        private Color[] electrocutionColors = new Color[] 
+        { 
+            new Color(0, 0, 108, 255), 
+            new Color(255, 0, 0, 255), 
+            new Color(0, 108, 0, 255), 
+            new Color(108, 0, 108, 255), 
+            new Color(255, 255, 0, 255), 
+            new Color(0, 108, 108, 255), 
+            new Color(255, 0, 255, 255), 
+            new Color(0, 255, 0, 255) 
+        };
+
+        public PlayerObject() : base("NBerzerk.Resources.player.png")
         {
-            playerTexture = mgr.Load<Texture2D>("NBerzerk.Resources.player.png");
+            Size = new Vector2(8, 17);
+            Electrocuting = false;
+
+            MoveTo(new Vector2(30, 99));
         }
 
-        public override void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
+        private readonly TimeSpan playerMoveSpeed = new TimeSpan(0, 0, 0, 0, 33);
+        private readonly TimeSpan playerAnimationSpeed = new TimeSpan(0, 0, 0, 0, 50);
+
+        private TimeSpan lastMoveTime = new TimeSpan();
+        private TimeSpan lastFrameUpdate = new TimeSpan();
+
+        public void Update(GameTime gameTime)
         {
-            Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Position.X + 7, (int)Position.Y + 15);
-            Rectangle sourceRectangle = new Rectangle(8 * frame, 0, 8 * frame + 7, 15);
-
-            spriteBatch.Draw(playerTexture, destinationRectangle, sourceRectangle, Color.White, 0.0f, Vector2.One, SpriteEffects.None, 0f);
-        }
-
-        public override void Update(GameTime gameTime, KeyboardState keyboardState)
-        {
-            if (gameTime.FrameCount % 2 == 0)
+            if (!Electrocuting)
             {
-                if (keyboardState.IsPressed(Key.UpArrow))
+                CurrentColor = new Color(0, 255, 0, 255);
+                if (gameTime.TotalGameTime - lastMoveTime > playerMoveSpeed)
                 {
-                    Position.Y = Position.Y - 1;
-                }
-                if (keyboardState.IsPressed(Key.Down))
-                {
-                    Position.Y = Position.Y + 1;
-                }
-                if (keyboardState.IsPressed(Key.Left))
-                {
-                    if (facingRight && frame < 5)
+                    if (KeyboardState.IsPressed(Key.UpArrow))
                     {
-                        frame = 5;
-                        facingRight = false;
+                        Move(new Vector2(0, -1));
                     }
-                    Position.X = Position.X - 1;
-                }
-                if (keyboardState.IsPressed(Key.Right))
-                {
-                    if (!facingRight && frame > 4)
+                    if (KeyboardState.IsPressed(Key.Down))
                     {
-                        frame = 0;
-                        facingRight = true;
+                        Move(new Vector2(0, 1));
                     }
-                    Position.X = Position.X + 1;
+                    if (KeyboardState.IsPressed(Key.Left))
+                    {
+                        if (facingRight && CurrentFrame < 5)
+                        {
+                            CurrentFrame = 5;
+                            facingRight = false;
+                        }
+                        Move(new Vector2(-1, 0));
+                    }
+                    if (KeyboardState.IsPressed(Key.Right))
+                    {
+                        if (!facingRight && CurrentFrame > 4)
+                        {
+                            CurrentFrame = 0;
+                            facingRight = true;
+                        }
+                        Move(new Vector2(1, 0));
+                    }
+
+                    lastMoveTime = gameTime.TotalGameTime;
                 }
-            }
 
 
-            if (keyboardState.IsPressed(Key.UpArrow) || keyboardState.IsPressed(Key.Down) ||
-                keyboardState.IsPressed(Key.Left) || keyboardState.IsPressed(Key.Right))
-            {
-                if (gameTime.FrameCount % 5 == 0)
+                if (KeyboardState.IsPressed(Key.UpArrow) || KeyboardState.IsPressed(Key.Down) ||
+                    KeyboardState.IsPressed(Key.Left) || KeyboardState.IsPressed(Key.Right))
                 {
-                    frame++;
+                    if (gameTime.TotalGameTime - lastFrameUpdate > playerAnimationSpeed)
+                    {
+                        CurrentFrame++;
+                        lastFrameUpdate = gameTime.TotalGameTime;
+                    }
+
+                    if (CurrentFrame == 4)
+                    {
+                        CurrentFrame = 0;
+                    }
+
+                    if (CurrentFrame == 9)
+                    {
+                        CurrentFrame = 5;
+                    }
                 }
-
-                if (frame > 0 && frame % 4 == 0)
+                else
                 {
-                    frame = frame - 4;
+                    CurrentFrame = 0;
+                    facingRight = true;
                 }
             }
             else
             {
-                frame = 0;
-                facingRight = true;
+                if (CurrentFrame < 10)
+                {
+                    CurrentFrame = 10;
+                }
+
+                if (gameTime.FrameCount % 5 == 0)
+                {
+                    CurrentFrame++;
+                }
+
+                if (CurrentFrame > 13)
+                {
+                    CurrentFrame = 10;
+                }
+
+                electrocutionFrame++;
+
+                CurrentColor = electrocutionColors[(CurrentFrame - 10) % 8];
             }
         }
     }
