@@ -136,9 +136,7 @@ namespace NBerzerk
             var keyboardState = keyboard.GetCurrentState();
 
             fpsObject.Update(gameTime);
-
             playerObject.Update(gameTime);
-
 
             bool changeRoom = false;
 
