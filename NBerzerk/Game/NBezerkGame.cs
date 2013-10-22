@@ -33,6 +33,8 @@ namespace NBerzerk
         private PlayerObject playerObject = new PlayerObject();
         private FPSObject fpsObject = new FPSObject();
 
+        private ComponentFramework.TextRendererObject textRendererObject = new ComponentFramework.TextRendererObject();
+
         bool contentLoaded = false;
 
         public NBerzerkGame()
@@ -67,6 +69,8 @@ namespace NBerzerk
 
                 playerObject.LoadContent(Content);
                 fpsObject.LoadContent(Content);
+
+                textRendererObject.LoadContent(Content);
 
                 contentLoaded = true;
             }
@@ -110,6 +114,15 @@ namespace NBerzerk
 
             roomObject.Draw(spriteBatch);
             playerObject.Draw(spriteBatch);
+            
+            /*
+            textRendererObject.DrawText("High Scores", new Vector2(88, 0), new Color(0, 255, 0, 255), spriteBatch);
+            textRendererObject.DrawText("Push 1 Player Start Button", new Vector2(20, 190), new Color(255, 0, 0, 255), spriteBatch);
+
+            textRendererObject.DrawText(string.Format("{0,6:#####0}", 150), new Vector2(1, 213), new Color(0, 255, 0, 255), spriteBatch);
+
+            textRendererObject.DrawText("34", new Vector2(120, 213), new Color(108, 108, 108, 255), spriteBatch);
+             */
 
             spriteBatch.End();
 

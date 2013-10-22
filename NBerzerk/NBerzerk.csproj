@@ -96,6 +96,7 @@
     <Compile Include="Common\EmbeddedResourceResolver.cs" />
     <Compile Include="Common\RectangleExtensions.cs" />
     <Compile Include="ComponentFramework\AnimatedObject.cs" />
+    <Compile Include="ComponentFramework\TextRendererObject.cs" />
     <Compile Include="GameObjects\FPSObject.cs" />
     <Compile Include="ComponentFramework\GameObject.cs" />
     <Compile Include="ComponentFramework\IGameObject.cs" />
@@ -167,6 +168,7 @@
     <Content Include="Research\CharacterSet\High.jpg" />
     <Content Include="Research\OffsetWalls.jpg" />
     <Compile Include="GameObjects\RoomObject.cs" />
+    <EmbeddedResource Include="Resources\charset.png" />
     <Content Include="Resources\player_explosion.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
