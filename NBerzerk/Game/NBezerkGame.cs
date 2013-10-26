@@ -87,15 +87,16 @@ namespace NBerzerk
         {
             Window.Title = "NBerzerk";
             IsMouseVisible = true;
-            Window.AllowUserResizing = true;
+            Window.AllowUserResizing = false;
             (this.Window.NativeWindow as Form).Icon = new System.Drawing.Icon(this.GetType(), "NBerzerk.ico");
 
-            (this.Window.NativeWindow as Form).Size = new System.Drawing.Size(256 * 3, 224 * 3);
+            (this.Window.NativeWindow as Form).ClientSize = new System.Drawing.Size(256 * 2, 224 * 2);
+            (this.Window.NativeWindow as Form).MaximizeBox = false;
 
             base.Initialize();
         }
 
-        public DrawingSize Resolution { get { return new DrawingSize(256, 224); } }
+        public Size2 Resolution { get { return new Size2(256, 224); } }
 
         /*
         void RenderScore(RenderTarget renderTarget)
@@ -109,20 +110,21 @@ namespace NBerzerk
         {
             GraphicsDevice.Clear(Color.Black);
 
-            Matrix scaleMatrix = Matrix.Scaling(GraphicsDevice.Viewport.Width / Resolution.Width, GraphicsDevice.Viewport.Height / Resolution.Height, 1);
+            Matrix scaleMatrix = Matrix.Scaling(2.0f, 2.0f, 1.0f);
             spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.NonPremultiplied, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
 
             roomObject.Draw(spriteBatch);
             playerObject.Draw(spriteBatch);
             
             /*
-            textRendererObject.DrawText("High Scores", new Vector2(88, 0), new Color(0, 255, 0, 255), spriteBatch);
+            textRendererObject.DrawText("High Scores", new Vector2(88, 1), new Color(0, 255, 0, 255), spriteBatch);
             textRendererObject.DrawText("Push 1 Player Start Button", new Vector2(20, 190), new Color(255, 0, 0, 255), spriteBatch);
 
             textRendererObject.DrawText(string.Format("{0,6:#####0}", 150), new Vector2(1, 213), new Color(0, 255, 0, 255), spriteBatch);
+            
 
             textRendererObject.DrawText("34", new Vector2(120, 213), new Color(108, 108, 108, 255), spriteBatch);
-             */
+            */
 
             spriteBatch.End();
 

@@ -17,5 +17,10 @@ namespace NBerzerk
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             return assembly.GetManifestResourceStream(assetName);
         }
+
+        public bool Exists(string assetName)
+        {
+            return true;
+        }
     }
 }

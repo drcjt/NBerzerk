@@ -13,6 +13,7 @@ namespace NBerzerk.ComponentFramework
     public class TextRendererObject : GameObject
     {
         Texture2D spriteSheet;
+        Texture2D updatedSpriteSheet;
         Color[] imageData;
         bool[] descender;
 
@@ -30,6 +31,9 @@ namespace NBerzerk.ComponentFramework
                 imageData[index * 8] = Color.Transparent;
             }
 
+            updatedSpriteSheet = Texture2D.New(spriteSheet.GraphicsDevice, spriteSheet.Width, spriteSheet.Height, PixelFormat.B8G8R8A8.UNorm);
+            updatedSpriteSheet.SetData(imageData);
+
             // This doesn't work - needs fixing
             //spriteSheet.SetData(imageData);
         }
@@ -40,16 +44,15 @@ namespace NBerzerk.ComponentFramework
             foreach (char c in text)
             {
                 int charIndex = (int)c - (int)' ' + 1;
-                Rectangle destinationRectangle = new Rectangle(x, (int)position.Y, x + 8, (int)position.Y + 9);
-                Rectangle sourceRectangle = new Rectangle(charIndex * 8, 0, (charIndex * 8) + 8, 9);
+                Rectangle destinationRectangle = new Rectangle(x, (int)position.Y, 8, 9);
+                Rectangle sourceRectangle = new Rectangle(charIndex * 8, 0, 8, 9);
 
                 if (descender[charIndex])
                 {
-                    destinationRectangle.Top += 3;
-                    destinationRectangle.Bottom += 3;
+                    destinationRectangle = new Rectangle(x, (int)position.Y + 3, 8, 9);
                 }
 
-                spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, color, 0.0f, Vector2.One, SpriteEffects.None, 0f);
+                spriteBatch.Draw(updatedSpriteSheet, destinationRectangle, sourceRectangle, color, 0.0f, Vector2.One, SpriteEffects.None, 0f);
 
                 x += 8;
             }

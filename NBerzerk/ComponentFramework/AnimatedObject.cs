@@ -33,8 +33,8 @@ namespace NBerzerk.ComponentFramework
 
         public void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
         {
-            Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Position.X + (int)Size.X, (int)Position.Y + (int)Size.Y);
-            Rectangle sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, CurrentFrame * (int)Size.X + (int)Size.X, (int)Size.Y);
+            Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+            Rectangle sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, (int)Size.X, (int)Size.Y);
 
             spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, CurrentColor, 0.0f, Vector2.One, SpriteEffects.None, 0f);
         }

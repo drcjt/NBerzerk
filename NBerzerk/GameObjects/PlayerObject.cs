@@ -55,7 +55,7 @@ namespace NBerzerk
                 CurrentColor = new Color(0, 255, 0, 255);
                 if (gameTime.TotalGameTime - lastMoveTime > playerMoveSpeed)
                 {
-                    if (KeyboardState.IsPressed(Key.UpArrow))
+                    if (KeyboardState.IsPressed(Key.Up))
                     {
                         Move(new Vector2(0, -1));
                     }
@@ -86,7 +86,7 @@ namespace NBerzerk
                 }
 
 
-                if (KeyboardState.IsPressed(Key.UpArrow) || KeyboardState.IsPressed(Key.Down) ||
+                if (KeyboardState.IsPressed(Key.Up) || KeyboardState.IsPressed(Key.Down) ||
                     KeyboardState.IsPressed(Key.Left) || KeyboardState.IsPressed(Key.Right))
                 {
                     if (gameTime.TotalGameTime - lastFrameUpdate > playerAnimationSpeed)

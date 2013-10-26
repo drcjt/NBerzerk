@@ -43,7 +43,7 @@ namespace NBerzerk.ComponentFramework
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)Position.X + (int)Size.X, (int)Position.Y + (int)Size.Y);
+                return new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
             }
         }
 

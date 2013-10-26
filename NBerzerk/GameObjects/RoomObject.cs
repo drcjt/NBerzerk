@@ -100,7 +100,7 @@ namespace NBerzerk
         {
             for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
-                DrawingPoint pillarLocation = new DrawingPoint(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
+                Point pillarLocation = new Point(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
 
                 char wallDirection = Maze[pillarIndex];
 
@@ -124,18 +124,18 @@ namespace NBerzerk
         }
 
         public void Draw(SpriteBatch spriteBatch)
-        {
+        {   
             foreach (WallObject edgeWall in edgeWalls)
             {
                 edgeWall.Draw(spriteBatch);
             }
-
+            
             doorWall.Draw(spriteBatch);
 
             foreach (WallObject mazeWall in mazeWalls)
             {
                 mazeWall.Draw(spriteBatch);
-            }
+            }   
         }
     }
 }
