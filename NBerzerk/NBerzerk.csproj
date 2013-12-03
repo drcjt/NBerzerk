@@ -111,6 +111,9 @@
     <Compile Include="ComponentFramework\IMovable.cs" />
     <Compile Include="ComponentFramework\IPositionable.cs" />
     <Compile Include="ComponentFramework\ISizable.cs" />
+    <Compile Include="GameObjects\HighScoresScreenObject.cs" />
+    <Compile Include="GameObjects\RobotObject.cs" />
+    <Compile Include="Game\NBerzerkScreen.cs" />
     <Compile Include="MazeGenerator.cs" />
     <Compile Include="Game\NBezerk.cs" />
     <Compile Include="Game\NBezerkGame.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="GameObjects\RoomObject.cs" />
     <EmbeddedResource Include="Resources\charset.png" />
     <Content Include="Resources\player_explosion.png" />
+    <EmbeddedResource Include="Resources\robot.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup />

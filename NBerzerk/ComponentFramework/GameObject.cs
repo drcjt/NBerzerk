@@ -47,15 +47,15 @@ namespace NBerzerk.ComponentFramework
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
         }
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
         }
 
-        public void LoadContent(IContentManager mgr)
+        public virtual void LoadContent(IContentManager mgr)
         {
         }
 

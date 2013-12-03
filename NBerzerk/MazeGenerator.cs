@@ -15,13 +15,14 @@ namespace NBerzerk
         /// <returns></returns>
         public static string GenerateMaze(UInt16 room)
         {
-            UInt16 pillarValue = room;
+            RandomNumberGenerator.seed = room;
 
             StringBuilder maze = new StringBuilder(8);
 
             for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
-                pillarValue = RandomNumberGenerator.GetRandomNumber(RandomNumberGenerator.GetRandomNumber(pillarValue));
+                RandomNumberGenerator.GetRandomNumber();
+                UInt16 pillarValue = RandomNumberGenerator.GetRandomNumber();
                 maze.Append(GetNextWall(pillarValue));
             }
 
@@ -37,8 +38,7 @@ namespace NBerzerk
         /// <returns>wall direction as a character, 'N'orth, 'S'outh, 'E'ast, or 'W'est</returns>
         private static char GetNextWall(UInt16 pillarValue)
         {
-            UInt16 wallBits = (UInt16)(pillarValue >> 8);
-            wallBits = (UInt16)(wallBits & 3);
+            UInt16 wallBits = (UInt16)(pillarValue & 3);
 
             return "NSEW"[wallBits];
         }

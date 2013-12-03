@@ -48,7 +48,7 @@ namespace NBerzerk
         private TimeSpan lastMoveTime = new TimeSpan();
         private TimeSpan lastFrameUpdate = new TimeSpan();
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (!Electrocuting)
             {

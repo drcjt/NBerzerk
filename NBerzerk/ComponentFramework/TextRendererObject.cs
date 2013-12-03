@@ -17,7 +17,7 @@ namespace NBerzerk.ComponentFramework
         Color[] imageData;
         bool[] descender;
 
-        public void LoadContent(IContentManager mgr)
+        public override void LoadContent(IContentManager mgr)
         {
             spriteSheet = mgr.Load<Texture2D>("NBerzerk.Resources.charset.png");
 

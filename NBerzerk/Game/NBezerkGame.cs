@@ -29,13 +29,19 @@ namespace NBerzerk
         private UInt16 roomY = 49;
         private UInt16 roomX = 83;
 
+        private int robotFactor = 60;
+
         private RoomObject roomObject = new RoomObject();
         private PlayerObject playerObject = new PlayerObject();
+        private RobotObject[] robotObjects =  new RobotObject[11];
         private FPSObject fpsObject = new FPSObject();
+        private HighScoresScreenObject highScoresScreenObject = new HighScoresScreenObject();
 
         private ComponentFramework.TextRendererObject textRendererObject = new ComponentFramework.TextRendererObject();
 
         bool contentLoaded = false;
+
+        NBerzerkScreen currentScreen = NBerzerkScreen.GamePlayScreen;
 
         public NBerzerkGame()
         {
@@ -48,13 +54,79 @@ namespace NBerzerk
             keyboard = new Keyboard(new DirectInput());
             keyboard.Acquire();
 
+            for (int robotIndex = 0; robotIndex < 11; robotIndex++)
+            {
+                robotObjects[robotIndex] = new RobotObject();
+            }
+
             GetMaze();
+        }
+
+        /// <summary>
+        /// Set the robot positions 
+        /// </summary>
+        private void SetRobotPositions()
+        {
+            Vector2[] robotStartPositions = { 
+                new Vector2(206, 150),
+                new Vector2(160, 150),
+                new Vector2(64, 150),
+                new Vector2(12, 150),
+                new Vector2(158, 80),
+                new Vector2(112, 80),
+                new Vector2(64, 80),
+                new Vector2(206, 12),
+                new Vector2(160, 12),
+                new Vector2(64, 12),
+                new Vector2(12, 12)
+            };
+
+            // BCD used in randomizing robots - always starts at 60 for new game and cycles to
+            // 20, 80, 40, 0 and then back to 60 whenever the player moves to new room or player dies
+            robotFactor += 60;
+            robotFactor = robotFactor % 100;
+
+            IList<Vector2> robotPositions = new List<Vector2>();
+            for (int robotNumber = 0; robotNumber < robotStartPositions.Length; robotNumber++)
+            {
+                UInt16 randomNumber = RandomNumberGenerator.GetRandomNumber();
+
+                int convertedRobotFactor = int.Parse(robotFactor.ToString(), System.Globalization.NumberStyles.HexNumber);
+
+                if (randomNumber >= convertedRobotFactor)
+                {
+                    Vector2 robotPosition = new Vector2();
+
+                    randomNumber = RandomNumberGenerator.GetRandomNumber();
+                    UInt16 x = (UInt16)robotStartPositions[robotNumber].X;
+                    randomNumber = (UInt16)(randomNumber & 0x1F);
+                    robotPosition.X = (UInt16)(x + randomNumber);
+
+                    randomNumber = RandomNumberGenerator.GetRandomNumber();
+                    UInt16 y = (UInt16)robotStartPositions[robotNumber].Y;
+                    randomNumber = (UInt16)(randomNumber & 0x1F);
+                    robotPosition.Y = (UInt16)(y + randomNumber);
+
+                    Vector2 robotXY = new Vector2(robotPosition.X, robotPosition.Y);
+
+                    robotObjects[robotNumber].MoveTo(robotXY);
+                    robotObjects[robotNumber].Show = true;
+
+                    robotPositions.Add(robotPosition);
+                }
+                else
+                {
+                    robotObjects[robotNumber].Show = false;
+                }
+            }
         }
 
         private void GetMaze()
         {
             UInt16 roomNo = (UInt16)((roomY << 8) + roomX);
             roomObject.Maze = MazeGenerator.GenerateMaze(roomNo);
+
+            SetRobotPositions();
         }
 
         protected override void LoadContent()
@@ -70,6 +142,12 @@ namespace NBerzerk
                 playerObject.LoadContent(Content);
                 fpsObject.LoadContent(Content);
 
+                foreach (RobotObject robotObject in robotObjects)
+                {
+                    robotObject.LoadContent(Content);
+                }
+
+                highScoresScreenObject.LoadContent(Content);
                 textRendererObject.LoadContent(Content);
 
                 contentLoaded = true;
@@ -98,14 +176,6 @@ namespace NBerzerk
 
         public Size2 Resolution { get { return new Size2(256, 224); } }
 
-        /*
-        void RenderScore(RenderTarget renderTarget)
-        {
-            string scoreAsText = String.Format("{0,6:#####0}", score);
-            RenderText(scoreAsText, renderTarget, new DrawingPoint(1, 213));
-        }
-        */
-
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -113,18 +183,25 @@ namespace NBerzerk
             Matrix scaleMatrix = Matrix.Scaling(2.0f, 2.0f, 1.0f);
             spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.NonPremultiplied, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
 
-            roomObject.Draw(spriteBatch);
-            playerObject.Draw(spriteBatch);
-            
-            /*
-            textRendererObject.DrawText("High Scores", new Vector2(88, 1), new Color(0, 255, 0, 255), spriteBatch);
-            textRendererObject.DrawText("Push 1 Player Start Button", new Vector2(20, 190), new Color(255, 0, 0, 255), spriteBatch);
+            switch (currentScreen)
+            {
+                case NBerzerkScreen.HighScoresScreen:
+                    highScoresScreenObject.Draw(spriteBatch);
+                    break;
 
-            textRendererObject.DrawText(string.Format("{0,6:#####0}", 150), new Vector2(1, 213), new Color(0, 255, 0, 255), spriteBatch);
-            
+                case NBerzerkScreen.GamePlayScreen:
+                    roomObject.Draw(spriteBatch);
+                    playerObject.Draw(spriteBatch);
 
-            textRendererObject.DrawText("34", new Vector2(120, 213), new Color(108, 108, 108, 255), spriteBatch);
-            */
+                    foreach (RobotObject robotObject in robotObjects)
+                    {
+                        robotObject.Draw(spriteBatch);
+                    }
+                    break;
+
+                case NBerzerkScreen.DemoScreen:
+                    break;
+            }
 
             spriteBatch.End();
 
@@ -138,56 +215,72 @@ namespace NBerzerk
             var keyboardState = keyboard.GetCurrentState();
 
             fpsObject.Update(gameTime);
-            playerObject.Update(gameTime);
 
-            bool changeRoom = false;
+            switch (currentScreen)
+            {
+                case NBerzerkScreen.HighScoresScreen:
+                    highScoresScreenObject.Update(gameTime);
+                    break;
 
-            // Check if player has collided with wall
-            if (roomObject.Intersects(playerObject.BoundingBox))
-            {
-                playerObject.Electrocuting = true;
-            }
+                case NBerzerkScreen.GamePlayScreen:
+                    // Need to get new random number in here at a certain time interval - 1/60th of a second???
+                    
+                    playerObject.Update(gameTime);
 
-            if (playerObject.Electrocuting && playerObject.electrocutionFrame > 22)
-            {
-                playerObject.Electrocuting = false;
-                playerObject.electrocutionFrame = 0;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(30, 99));
-            }
+                    bool changeRoom = false;
 
-            if (playerObject.Position.Y == 0)
-            {
-                roomY--;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(128, 184));
-                roomObject.ClosedDoor = 'S';
-            }
-            if (playerObject.Position.X == 0)
-            {
-                roomX--;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(230, 99));
-                roomObject.ClosedDoor = 'E';
-            }
-            if (playerObject.Position.X == 256 - 8)
-            {
-                roomX++;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(8, 93));
-                roomObject.ClosedDoor = 'W';
-            }
-            if (playerObject.Position.Y == 192)
-            {
-                roomY++;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(125, 5));
-                roomObject.ClosedDoor = 'N';
-            }            
+                    // Check if player has collided with wall
+                    if (roomObject.Intersects(playerObject.BoundingBox))
+                    {
+                        playerObject.Electrocuting = true;
+                    }
 
-            if (changeRoom)
-            {
-                GetMaze();
+                    if (playerObject.Electrocuting && playerObject.electrocutionFrame > 22)
+                    {
+                        playerObject.Electrocuting = false;
+                        playerObject.electrocutionFrame = 0;
+                        changeRoom = true;
+                        playerObject.MoveTo(new Vector2(30, 99));
+                    }
+
+                    if (playerObject.Position.Y == 0)
+                    {
+                        roomY--;
+                        changeRoom = true;
+                        playerObject.MoveTo(new Vector2(128, 184));
+                        roomObject.ClosedDoor = 'S';
+                    }
+                    if (playerObject.Position.X == 0)
+                    {
+                        roomX--;
+                        changeRoom = true;
+                        playerObject.MoveTo(new Vector2(223, 99));
+                        roomObject.ClosedDoor = 'E';
+                    }
+                    if (playerObject.Position.X == 256 - 8)
+                    {
+                        roomX++;
+                        changeRoom = true;
+                        playerObject.MoveTo(new Vector2(8, 93));
+                        roomObject.ClosedDoor = 'W';
+                    }
+                    if (playerObject.Position.Y == 192)
+                    {
+                        roomY++;
+                        changeRoom = true;
+                        playerObject.MoveTo(new Vector2(125, 5));
+                        roomObject.ClosedDoor = 'N';
+                    }            
+
+                    if (changeRoom)
+                    {
+                        GetMaze();
+                    }
+
+                    break;
+
+                case NBerzerkScreen.DemoScreen:
+                    break;
             }
         }
     }

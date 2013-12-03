@@ -123,7 +123,7 @@ namespace NBerzerk
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {   
             foreach (WallObject edgeWall in edgeWalls)
             {

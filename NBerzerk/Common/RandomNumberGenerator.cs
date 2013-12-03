@@ -8,14 +8,22 @@ namespace NBerzerk
 {
     public class RandomNumberGenerator
     {
+        public static UInt16 seed;
+
         /// <summary>
         /// Linear Congruential Random Number Generator
         /// </summary>
         /// <param name="seed">seed number</param>
         /// <returns>random number</returns>
-        public static UInt16 GetRandomNumber(UInt16 seed)
+        public static UInt16 GetRandomNumber(UInt16 newSeed)
         {
-            return (UInt16)((seed * 7) + 0x3153);
+            seed = (UInt16)((newSeed * 7) + 0x3153);
+            return (UInt16)(seed >> 8);
+        }
+
+        public static UInt16 GetRandomNumber()
+        {
+            return GetRandomNumber(seed);
         }
     }
 }

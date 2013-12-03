@@ -20,23 +20,29 @@ namespace NBerzerk.ComponentFramework
         public int CurrentFrame { get; set; }
         public Color CurrentColor { get; set; }
 
+        public bool Show { get; set; }
+
         public AnimatedObject(string spriteSheetAssetName)
         {
             this.spriteSheetAssetName = spriteSheetAssetName;
             CurrentColor = Color.White;
+            Show = true;
         }
 
-        public void LoadContent(IContentManager mgr)
+        public override void LoadContent(IContentManager mgr)
         {
             spriteSheet = mgr.Load<Texture2D>(spriteSheetAssetName);
         }
 
-        public void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
+        public override void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
         {
-            Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
-            Rectangle sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, (int)Size.X, (int)Size.Y);
+            if (Show)
+            {
+                Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+                Rectangle sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, (int)Size.X, (int)Size.Y);
 
-            spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, CurrentColor, 0.0f, Vector2.One, SpriteEffects.None, 0f);
+                spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, CurrentColor, 0.0f, Vector2.One, SpriteEffects.None, 0f);
+            }
         }
     }
 }
