@@ -56,12 +56,22 @@ namespace NBerzerk
             textRendererObject.DrawText(string.Format("{0,2:#0}", Credits), new Vector2(128 - 8, 213), new Color(108, 108, 108, 255), spriteBatch);
         }
 
-        public override void Update(GameTime gameTime)
+        public new bool Update(GameTime gameTime)
         {
+            bool startNewGame = false;
+
             if (KeyboardState.IsPressed(Key.D5))
             {
                 Credits++;
             }
+
+            if (KeyboardState.IsPressed(Key.D1) && Credits > 0)
+            {
+                Credits--;
+                startNewGame = true;
+            }
+
+            return startNewGame;
         }
     }
 }

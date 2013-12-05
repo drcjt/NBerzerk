@@ -31,6 +31,8 @@ namespace NBerzerk
 
         private int robotFactor = 60;
 
+        private int lives = 3;
+
         private RoomObject roomObject = new RoomObject();
         private PlayerObject playerObject = new PlayerObject();
         private RobotObject[] robotObjects =  new RobotObject[11];
@@ -40,8 +42,7 @@ namespace NBerzerk
         private ComponentFramework.TextRendererObject textRendererObject = new ComponentFramework.TextRendererObject();
 
         bool contentLoaded = false;
-
-        NBerzerkScreen currentScreen = NBerzerkScreen.GamePlayScreen;
+        NBerzerkScreen currentScreen = NBerzerkScreen.HighScoresScreen;
 
         public NBerzerkGame()
         {
@@ -58,8 +59,6 @@ namespace NBerzerk
             {
                 robotObjects[robotIndex] = new RobotObject();
             }
-
-            GetMaze();
         }
 
         /// <summary>
@@ -219,7 +218,13 @@ namespace NBerzerk
             switch (currentScreen)
             {
                 case NBerzerkScreen.HighScoresScreen:
-                    highScoresScreenObject.Update(gameTime);
+                    if (highScoresScreenObject.Update(gameTime))
+                    {
+                        currentScreen = NBerzerkScreen.GamePlayScreen;
+                        playerObject.MoveTo(new Vector2(30, 99));
+                        GetMaze();
+                        lives = 3;
+                    }
                     break;
 
                 case NBerzerkScreen.GamePlayScreen:
@@ -230,9 +235,17 @@ namespace NBerzerk
                     bool changeRoom = false;
 
                     // Check if player has collided with wall
-                    if (roomObject.Intersects(playerObject.BoundingBox))
+                    if (roomObject.Intersects(playerObject.BoundingBox) && !playerObject.Electrocuting)
                     {
                         playerObject.Electrocuting = true;
+                        lives--;
+
+                        if (lives == 0)
+                        {
+                            currentScreen = NBerzerkScreen.HighScoresScreen;
+                            playerObject.Electrocuting = false;
+                            break;
+                        }
                     }
 
                     if (playerObject.Electrocuting && playerObject.electrocutionFrame > 22)
