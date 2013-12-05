@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NBerzerk.ico" />
+    <Content Include="README.txt" />
     <Content Include="Research\CharacterSet\A.jpg" />
     <Content Include="Research\CharacterSet\c.jpg" />
     <Content Include="Research\CharacterSet\Copyright.jpg" />
