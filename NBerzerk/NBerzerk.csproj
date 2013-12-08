@@ -113,6 +113,7 @@
     <Compile Include="ComponentFramework\ISizable.cs" />
     <Compile Include="GameObjects\HighScoresScreenObject.cs" />
     <Compile Include="GameObjects\RobotObject.cs" />
+    <Compile Include="GameObjects\GamePlayObject.cs" />
     <Compile Include="Game\NBerzerkScreen.cs" />
     <Compile Include="MazeGenerator.cs" />
     <Compile Include="Game\NBezerk.cs" />
