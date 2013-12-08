@@ -2,7 +2,7 @@ NBerzerk Readme
 
 A C# clone of the classic Berzerk arcade game.
 
-![Screenshot of NBerzerk](/NBerzerk/Screenshots/NBerzerk.png "Main Game")
+![Screenshot of NBerzerk](NBerzerk/Screenshots/NBerzerk.png "Main Game")
 
 INSTALLING
 ==========
