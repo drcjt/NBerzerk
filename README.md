@@ -12,15 +12,15 @@ GAME CONTROLS
 
 From the High Scores screen:
 
-[ 5 ]		- Insert a coin
-[ 1 ]		- Start a one player game
+[ 5 ]		- Insert a coin  
+[ 1 ]		- Start a one player game  
 
 In the playing a game screen:
 
-[ LEFT ARROW KEY ]		-	Move the player left
-[ RIGHT ARROW KEY ]		-	Move the player right
-[ UP ARROW KEY ]		-	Move the player up
-[ DOWN ARROW KEY ]		-	Move the player down
+[ LEFT ARROW KEY ]		-	Move the player left  
+[ RIGHT ARROW KEY ]		-	Move the player right  
+[ UP ARROW KEY ]		-	Move the player up  
+[ DOWN ARROW KEY ]		-	Move the player down  
 
 Enjoy.
 
