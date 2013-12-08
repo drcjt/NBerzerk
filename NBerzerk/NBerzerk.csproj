@@ -115,7 +115,7 @@
     <Compile Include="GameObjects\RobotObject.cs" />
     <Compile Include="GameObjects\GamePlayObject.cs" />
     <Compile Include="Game\NBerzerkScreen.cs" />
-    <Compile Include="MazeGenerator.cs" />
+    <Compile Include="GameObjects\MazeGenerator.cs" />
     <Compile Include="Game\NBezerk.cs" />
     <Compile Include="Game\NBezerkGame.cs" />
     <Compile Include="GameObjects\PlayerObject.cs" />
@@ -173,7 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NBerzerk.ico" />
-    <Content Include="README.txt" />
     <Content Include="Research\CharacterSet\A.jpg" />
     <Content Include="Research\CharacterSet\c.jpg" />
     <Content Include="Research\CharacterSet\Copyright.jpg" />
@@ -184,6 +183,7 @@
     <EmbeddedResource Include="Resources\charset.png" />
     <Content Include="Resources\player_explosion.png" />
     <EmbeddedResource Include="Resources\robot.png" />
+    <Content Include="Screenshots\NBerzek.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup />
