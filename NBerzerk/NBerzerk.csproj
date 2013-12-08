@@ -183,7 +183,7 @@
     <EmbeddedResource Include="Resources\charset.png" />
     <Content Include="Resources\player_explosion.png" />
     <EmbeddedResource Include="Resources\robot.png" />
-    <Content Include="Screenshots\NBerzek.png" />
+    <Content Include="Screenshots\NBerzerk.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup />
