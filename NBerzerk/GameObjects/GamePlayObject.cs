@@ -180,24 +180,20 @@ namespace NBerzerk
 
                 if (randomNumber >= convertedRobotFactor)
                 {
-                    Vector2 robotPosition = new Vector2();
-
                     randomNumber = RandomNumberGenerator.GetRandomNumber();
                     UInt16 x = (UInt16)robotStartPositions[robotNumber].X;
                     randomNumber = (UInt16)(randomNumber & 0x1F);
-                    robotPosition.X = (UInt16)(x + randomNumber);
+                    UInt16 robotPositionX = (UInt16)(x + randomNumber);
 
                     randomNumber = RandomNumberGenerator.GetRandomNumber();
                     UInt16 y = (UInt16)robotStartPositions[robotNumber].Y;
                     randomNumber = (UInt16)(randomNumber & 0x1F);
-                    robotPosition.Y = (UInt16)(y + randomNumber);
+                    UInt16 robotPositionY = (UInt16)(y + randomNumber);
 
-                    Vector2 robotXY = new Vector2(robotPosition.X, robotPosition.Y);
+                    Vector2 robotXY = new Vector2(robotPositionX, robotPositionY);
 
                     robotObjects[robotNumber].MoveTo(robotXY);
                     robotObjects[robotNumber].Show = true;
-
-                    robotPositions.Add(robotPosition);
                 }
                 else
                 {
