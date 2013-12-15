@@ -30,15 +30,19 @@ namespace NBerzerk
 
         bool contentLoaded = false;
 
-        public GamePlayObject()
+        private StateManager<GameObject> stateManager;
+
+        public GamePlayObject(StateManager<GameObject> stateManager)
         {
-            for (int robotIndex = 0; robotIndex < 11; robotIndex++)
+            this.stateManager = stateManager;
+
+            for (var robotIndex = 0; robotIndex < 11; robotIndex++)
             {
                 robotObjects[robotIndex] = new RobotObject();
             }
         }
 
-        public void StartGame()
+        public override void EnterState()
         {
             playerObject.MoveTo(new Vector2(30, 99));
             playerObject.Electrocuting = false;
@@ -54,7 +58,7 @@ namespace NBerzerk
             {
                 playerObject.LoadContent(mgr);
 
-                foreach (RobotObject robotObject in robotObjects)
+                foreach (var robotObject in robotObjects)
                 {
                     robotObject.LoadContent(mgr);
                 }
@@ -68,19 +72,19 @@ namespace NBerzerk
             roomObject.Draw(spriteBatch);
             playerObject.Draw(spriteBatch);
 
-            foreach (RobotObject robotObject in robotObjects)
+            foreach (var robotObject in robotObjects)
             {
                 robotObject.Draw(spriteBatch);
             }
         }
 
-        public new bool Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             // Need to get new random number in here at a certain time interval - 1/60th of a second???
 
             playerObject.Update(gameTime);
 
-            bool changeRoom = false;
+            var changeRoom = false;
 
             // Check if player has collided with wall
             if (roomObject.Intersects(playerObject.BoundingBox) && !playerObject.Electrocuting)
@@ -90,7 +94,7 @@ namespace NBerzerk
 
                 if (lives == 0)
                 {
-                    return true;
+                    stateManager.SwitchState(typeof(HighScoresScreenObject).Name);
                 }
             }
 
@@ -135,13 +139,11 @@ namespace NBerzerk
             {
                 GetMaze();
             }
-
-            return false;
         }
 
         private void GetMaze()
         {
-            UInt16 roomNo = (UInt16)((roomY << 8) + roomX);
+            var roomNo = (UInt16)((roomY << 8) + roomX);
             roomObject.Maze = MazeGenerator.GenerateMaze(roomNo);
 
             SetRobotPositions();
@@ -171,26 +173,26 @@ namespace NBerzerk
             robotFactor += 60;
             robotFactor = robotFactor % 100;
 
-            IList<Vector2> robotPositions = new List<Vector2>();
-            for (int robotNumber = 0; robotNumber < robotStartPositions.Length; robotNumber++)
+            var robotPositions = new List<Vector2>();
+            for (var robotNumber = 0; robotNumber < robotStartPositions.Length; robotNumber++)
             {
-                UInt16 randomNumber = RandomNumberGenerator.GetRandomNumber();
+                var randomNumber = RandomNumberGenerator.GetRandomNumber();
 
-                int convertedRobotFactor = int.Parse(robotFactor.ToString(), System.Globalization.NumberStyles.HexNumber);
+                var convertedRobotFactor = int.Parse(robotFactor.ToString(), System.Globalization.NumberStyles.HexNumber);
 
                 if (randomNumber >= convertedRobotFactor)
                 {
                     randomNumber = RandomNumberGenerator.GetRandomNumber();
-                    UInt16 x = (UInt16)robotStartPositions[robotNumber].X;
+                    var x = (UInt16)robotStartPositions[robotNumber].X;
                     randomNumber = (UInt16)(randomNumber & 0x1F);
-                    UInt16 robotPositionX = (UInt16)(x + randomNumber);
+                    var robotPositionX = (UInt16)(x + randomNumber);
 
                     randomNumber = RandomNumberGenerator.GetRandomNumber();
-                    UInt16 y = (UInt16)robotStartPositions[robotNumber].Y;
+                    var y = (UInt16)robotStartPositions[robotNumber].Y;
                     randomNumber = (UInt16)(randomNumber & 0x1F);
-                    UInt16 robotPositionY = (UInt16)(y + randomNumber);
+                    var robotPositionY = (UInt16)(y + randomNumber);
 
-                    Vector2 robotXY = new Vector2(robotPositionX, robotPositionY);
+                    var robotXY = new Vector2(robotPositionX, robotPositionY);
 
                     robotObjects[robotNumber].MoveTo(robotXY);
                     robotObjects[robotNumber].Show = true;

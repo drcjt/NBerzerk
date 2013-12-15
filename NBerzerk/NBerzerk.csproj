@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Common\EmbeddedResourceResolver.cs" />
     <Compile Include="Common\RectangleExtensions.cs" />
+    <Compile Include="Common\StateManager.cs" />
     <Compile Include="ComponentFramework\AnimatedObject.cs" />
     <Compile Include="ComponentFramework\TextRendererObject.cs" />
     <Compile Include="GameObjects\FPSObject.cs" />
@@ -143,7 +144,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\Arial16.tkfnt" />
+    <EmbeddedResource Include="Resources\Arial16" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

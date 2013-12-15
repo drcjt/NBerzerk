@@ -25,7 +25,7 @@ namespace NBerzerk.ComponentFramework
             spriteSheet.GetData(imageData);
 
             descender = new bool[spriteSheet.Width / 8];
-            for (int index = 0; index < (spriteSheet.Width / 8); index++)
+            for (var index = 0; index < (spriteSheet.Width / 8); index++)
             {
                 descender[index] = imageData[index * 8] == Color.White;
                 imageData[index * 8] = Color.Transparent;
@@ -40,12 +40,12 @@ namespace NBerzerk.ComponentFramework
 
         public void DrawText(string text, Vector2 position, Color color, SpriteBatch spriteBatch)
         {
-            int x = (int)position.X;
-            foreach (char c in text)
+            var x = (int)position.X;
+            foreach (var c in text)
             {
-                int charIndex = (int)c - (int)' ' + 1;
-                Rectangle destinationRectangle = new Rectangle(x, (int)position.Y, 8, 9);
-                Rectangle sourceRectangle = new Rectangle(charIndex * 8, 0, 8, 9);
+                var charIndex = (int)c - (int)' ' + 1;
+                var destinationRectangle = new Rectangle(x, (int)position.Y, 8, 9);
+                var sourceRectangle = new Rectangle(charIndex * 8, 0, 8, 9);
 
                 if (descender[charIndex])
                 {

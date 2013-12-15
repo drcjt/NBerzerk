@@ -32,6 +32,13 @@ namespace NBerzerk
         public int PlayerOneHighestScore { get; set; }
         public int? PlayerTwoHighestScore { get; set; }
 
+        private StateManager<GameObject> stateManager;
+
+        public HighScoresScreenObject(StateManager<GameObject> stateManager)
+        {
+            this.stateManager = stateManager;
+        }
+
         public override void LoadContent(IContentManager mgr)
         {
             PlayerTwoHighestScore = 10;
@@ -56,10 +63,8 @@ namespace NBerzerk
             textRendererObject.DrawText(string.Format("{0,2:#0}", Credits), new Vector2(128 - 8, 213), new Color(108, 108, 108, 255), spriteBatch);
         }
 
-        public new bool Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            bool startNewGame = false;
-
             if (KeyboardState.IsPressed(Key.D5))
             {
                 Credits++;
@@ -68,10 +73,8 @@ namespace NBerzerk
             if (KeyboardState.IsPressed(Key.D1) && Credits > 0)
             {
                 Credits--;
-                startNewGame = true;
+                stateManager.SwitchState(typeof(GamePlayObject).Name);
             }
-
-            return startNewGame;
         }
     }
 }

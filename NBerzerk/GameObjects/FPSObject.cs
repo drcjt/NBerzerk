@@ -25,14 +25,11 @@ namespace NBerzerk
 
         public override void LoadContent(IContentManager mgr)
         {
-            // NEED to update as tkfonts changed in SharpDX 2.5
-
-            //fpsFont = mgr.Load<SpriteFont>("NBerzerk.Resources.Arial16");
+            fpsFont = mgr.Load<SpriteFont>("NBerzerk.Resources.Arial16");
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            /*
             // Update the FPS text
             frameCount++;
             if (fpsClock.ElapsedMilliseconds > 1000.0f)
@@ -47,7 +44,6 @@ namespace NBerzerk
             {
                 spriteBatch.DrawString(fpsFont, fpsText, new Vector2(0, 0), Color.White);
             }
-             */
         }
 
         public override void Update(GameTime gameTime)

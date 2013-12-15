@@ -29,7 +29,7 @@ namespace NBerzerk
 
         public RoomObject()
         {
-            for (int mazeWallIndex = 0; mazeWallIndex < mazeWalls.Length; mazeWallIndex++)
+            for (var mazeWallIndex = 0; mazeWallIndex < mazeWalls.Length; mazeWallIndex++)
             {
                 mazeWalls[mazeWallIndex] = new WallObject();
             }
@@ -52,12 +52,12 @@ namespace NBerzerk
         public bool Intersects(Rectangle value)
         {
             bool result = false;
-            foreach (WallObject edgeWall in edgeWalls)
+            foreach (var edgeWall in edgeWalls)
             {
                 result = result || edgeWall.BoundingBox.Intersects(value);
             }
 
-            foreach (WallObject mazeWall in mazeWalls)
+            foreach (var mazeWall in mazeWalls)
             {
                 result = result || mazeWall.BoundingBox.Intersects(value);
             }
@@ -98,11 +98,11 @@ namespace NBerzerk
 
 		private void UpdateMazeWalls()
         {
-            for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
+            for (var pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
-                Point pillarLocation = new Point(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
+                var pillarLocation = new Point(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
 
-                char wallDirection = Maze[pillarIndex];
+                var wallDirection = Maze[pillarIndex];
 
                 Vector2 pillarPosition;
                 pillarPosition.X = (wallDirection == 'W') ? pillarLocation.X - 48 : pillarLocation.X;
@@ -125,14 +125,14 @@ namespace NBerzerk
 
         public override void Draw(SpriteBatch spriteBatch)
         {   
-            foreach (WallObject edgeWall in edgeWalls)
+            foreach (var edgeWall in edgeWalls)
             {
                 edgeWall.Draw(spriteBatch);
             }
             
             doorWall.Draw(spriteBatch);
 
-            foreach (WallObject mazeWall in mazeWalls)
+            foreach (var mazeWall in mazeWalls)
             {
                 mazeWall.Draw(spriteBatch);
             }   

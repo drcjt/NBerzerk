@@ -27,13 +27,14 @@ namespace NBerzerk
         static public Keyboard keyboard;
 
         private FPSObject fpsObject = new FPSObject();
-        private HighScoresScreenObject highScoresScreenObject = new HighScoresScreenObject();
-        private GamePlayObject gamePlayObject = new GamePlayObject();
+        private HighScoresScreenObject highScoresScreenObject;
+        private GamePlayObject gamePlayObject;
 
         private ComponentFramework.TextRendererObject textRendererObject = new ComponentFramework.TextRendererObject();
 
         bool contentLoaded = false;
-        NBerzerkScreen currentScreen = NBerzerkScreen.HighScoresScreen;
+
+        StateManager<ComponentFramework.GameObject> screenStateManager = new StateManager<ComponentFramework.GameObject>();
 
         public NBerzerkGame()
         {
@@ -45,6 +46,14 @@ namespace NBerzerk
 
             keyboard = new Keyboard(new DirectInput());
             keyboard.Acquire();
+
+            highScoresScreenObject = new HighScoresScreenObject(screenStateManager);
+            gamePlayObject = new GamePlayObject(screenStateManager);
+
+            screenStateManager.AddState(highScoresScreenObject);
+            screenStateManager.AddState(gamePlayObject);
+
+            screenStateManager.CurrentState = highScoresScreenObject;
         }
 
         protected override void LoadContent()
@@ -60,6 +69,7 @@ namespace NBerzerk
                 highScoresScreenObject.LoadContent(Content);
                 gamePlayObject.LoadContent(Content);
                 textRendererObject.LoadContent(Content);
+                fpsObject.LoadContent(Content);
 
                 contentLoaded = true;
             }
@@ -91,23 +101,9 @@ namespace NBerzerk
         {
             GraphicsDevice.Clear(Color.Black);
 
-            Matrix scaleMatrix = Matrix.Scaling(2.0f, 2.0f, 1.0f);
+            var scaleMatrix = Matrix.Scaling(2.0f, 2.0f, 1.0f);
             spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.NonPremultiplied, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
-
-            switch (currentScreen)
-            {
-                case NBerzerkScreen.HighScoresScreen:
-                    highScoresScreenObject.Draw(spriteBatch);
-                    break;
-
-                case NBerzerkScreen.GamePlayScreen:
-                    gamePlayObject.Draw(spriteBatch);
-                    break;
-
-                case NBerzerkScreen.DemoScreen:
-                    break;
-            }
-
+            screenStateManager.CurrentState.Draw(spriteBatch);
             spriteBatch.End();
 
             spriteBatch.Begin();
@@ -120,27 +116,7 @@ namespace NBerzerk
             var keyboardState = keyboard.GetCurrentState();
 
             fpsObject.Update(gameTime);
-
-            switch (currentScreen)
-            {
-                case NBerzerkScreen.HighScoresScreen:
-                    if (highScoresScreenObject.Update(gameTime))
-                    {
-                        currentScreen = NBerzerkScreen.GamePlayScreen;
-                        gamePlayObject.StartGame();
-                    }
-                    break;
-
-                case NBerzerkScreen.GamePlayScreen:
-                    if (gamePlayObject.Update(gameTime))
-                    {
-                        currentScreen = NBerzerkScreen.HighScoresScreen;
-                    }
-                    break;
-
-                case NBerzerkScreen.DemoScreen:
-                    break;
-            }
+            screenStateManager.CurrentState.Update(gameTime);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace NBerzerk
 
             StringBuilder maze = new StringBuilder(8);
 
-            for (int pillarIndex = 0; pillarIndex < 8; pillarIndex++)
+            for (var pillarIndex = 0; pillarIndex < 8; pillarIndex++)
             {
                 RandomNumberGenerator.GetRandomNumber();
                 UInt16 pillarValue = RandomNumberGenerator.GetRandomNumber();
@@ -38,7 +38,7 @@ namespace NBerzerk
         /// <returns>wall direction as a character, 'N'orth, 'S'outh, 'E'ast, or 'W'est</returns>
         private static char GetNextWall(UInt16 pillarValue)
         {
-            UInt16 wallBits = (UInt16)(pillarValue & 3);
+            var wallBits = (UInt16)(pillarValue & 3);
 
             return "NSEW"[wallBits];
         }

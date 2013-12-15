@@ -38,8 +38,8 @@ namespace NBerzerk.ComponentFramework
         {
             if (Show)
             {
-                Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
-                Rectangle sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, (int)Size.X, (int)Size.Y);
+                var destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+                var sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, (int)Size.X, (int)Size.Y);
 
                 spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, CurrentColor, 0.0f, Vector2.One, SpriteEffects.None, 0f);
             }

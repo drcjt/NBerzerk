@@ -12,7 +12,7 @@ using SharpDX.DirectInput;
 
 namespace NBerzerk.ComponentFramework
 {
-    public class GameObject : IGameObject, IPositionable, IMovable, ISizable
+    public class GameObject : IGameObject, IPositionable, IMovable, ISizable, IState
     {
         private Vector2 position;
 
@@ -65,6 +65,16 @@ namespace NBerzerk.ComponentFramework
             { 
                 return NBerzerkGame.keyboard.GetCurrentState(); 
             }
+        }
+
+        public string StateName { get { return this.GetType().Name;  } }
+
+        public virtual void EnterState() 
+        { 
+        }
+
+        public virtual void LeaveState() 
+        { 
         }
     }
 }
