@@ -12,6 +12,7 @@ using SharpDX;
 using SharpDX.DirectInput;
 using SharpDX.DXGI;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Input;
 using SharpDX.Toolkit.Graphics;
 
 namespace NBerzerk
@@ -19,6 +20,7 @@ namespace NBerzerk
     public class NBerzerkGame : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
+        static public KeyboardManager keyboardManager;
 
         private PrimitiveBatch<VertexPositionColor> batch;
         private SpriteBatch spriteBatch;
@@ -39,6 +41,7 @@ namespace NBerzerk
         public NBerzerkGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
+            keyboardManager = new KeyboardManager(this);
             Content.Resolvers.Add(new EmbeddedResourceResolver());
 
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
@@ -113,7 +116,7 @@ namespace NBerzerk
         
         protected override void Update(GameTime gameTime)
         {
-            var keyboardState = keyboard.GetCurrentState();
+            var keyboardState = keyboardManager.GetState();
 
             fpsObject.Update(gameTime);
             screenStateManager.CurrentState.Update(gameTime);

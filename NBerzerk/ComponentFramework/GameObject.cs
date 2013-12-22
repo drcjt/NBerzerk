@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using SharpDX;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Input;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
-using SharpDX.DirectInput;
 
 namespace NBerzerk.ComponentFramework
 {
@@ -59,11 +59,11 @@ namespace NBerzerk.ComponentFramework
         {
         }
 
-        public KeyboardState KeyboardState
+        public SharpDX.Toolkit.Input.KeyboardState KeyboardState
         {
             get 
             { 
-                return NBerzerkGame.keyboard.GetCurrentState(); 
+                return NBerzerkGame.keyboardManager.GetState(); 
             }
         }
 

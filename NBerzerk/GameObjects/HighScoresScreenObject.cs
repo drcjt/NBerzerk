@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using SharpDX;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Input;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
-using SharpDX.DirectInput;
 
 using NBerzerk.Common;
 using NBerzerk.ComponentFramework;
@@ -43,6 +43,7 @@ namespace NBerzerk
         {
             PlayerTwoHighestScore = 10;
             textRendererObject.LoadContent(mgr);
+            oldState = KeyboardState;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -63,18 +64,23 @@ namespace NBerzerk
             textRendererObject.DrawText(string.Format("{0,2:#0}", Credits), new Vector2(128 - 8, 213), new Color(108, 108, 108, 255), spriteBatch);
         }
 
+        KeyboardState oldState;
+
         public override void Update(GameTime gameTime)
         {
-            if (KeyboardState.IsPressed(Key.D5))
+            KeyboardState newState = KeyboardState;
+
+            if (oldState.IsKeyDown(Keys.D5) && newState.IsKeyUp(Keys.D5))
             {
                 Credits++;
             }
 
-            if (KeyboardState.IsPressed(Key.D1) && Credits > 0)
+            if (oldState.IsKeyDown(Keys.D1) && newState.IsKeyUp(Keys.D1) && Credits > 0)
             {
                 Credits--;
                 stateManager.SwitchState(typeof(GamePlayObject).Name);
             }
+            oldState = newState;
         }
     }
 }

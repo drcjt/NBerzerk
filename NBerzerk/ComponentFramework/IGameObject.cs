@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using SharpDX;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Input;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
-using SharpDX.DirectInput;
 
 namespace NBerzerk.ComponentFramework
 {

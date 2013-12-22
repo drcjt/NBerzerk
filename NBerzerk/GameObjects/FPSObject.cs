@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 using SharpDX;
-using SharpDX.DirectInput;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Input;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 
@@ -26,6 +26,7 @@ namespace NBerzerk
         public override void LoadContent(IContentManager mgr)
         {
             fpsFont = mgr.Load<SpriteFont>("NBerzerk.Resources.Arial16");
+            oldState = KeyboardState;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -46,12 +47,18 @@ namespace NBerzerk
             }
         }
 
+        KeyboardState oldState;
+
         public override void Update(GameTime gameTime)
         {
-            if (KeyboardState.IsPressed(Key.F11))
+            KeyboardState newState = KeyboardState;
+
+            if (oldState.IsKeyDown(Keys.F11) && newState.IsKeyUp(Keys.F11))
             {
                 ShowFramesPerSecond = !ShowFramesPerSecond;
             }
+
+            oldState = newState;
         }
     }
 }

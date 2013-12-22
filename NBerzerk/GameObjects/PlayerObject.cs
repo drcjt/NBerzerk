@@ -8,7 +8,7 @@ using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
-using SharpDX.DirectInput;
+using SharpDX.Toolkit.Input;
 
 using NBerzerk.ComponentFramework;
 
@@ -55,15 +55,15 @@ namespace NBerzerk
                 CurrentColor = new Color(0, 255, 0, 255);
                 if (gameTime.TotalGameTime - lastMoveTime > playerMoveSpeed)
                 {
-                    if (KeyboardState.IsPressed(Key.Up))
+                    if (KeyboardState.IsKeyDown(Keys.Up))
                     {
                         Move(new Vector2(0, -1));
                     }
-                    if (KeyboardState.IsPressed(Key.Down))
+                    if (KeyboardState.IsKeyDown(Keys.Down))
                     {
                         Move(new Vector2(0, 1));
                     }
-                    if (KeyboardState.IsPressed(Key.Left))
+                    if (KeyboardState.IsKeyDown(Keys.Left))
                     {
                         if (facingRight && CurrentFrame < 5)
                         {
@@ -72,7 +72,7 @@ namespace NBerzerk
                         }
                         Move(new Vector2(-1, 0));
                     }
-                    if (KeyboardState.IsPressed(Key.Right))
+                    if (KeyboardState.IsKeyDown(Keys.Right))
                     {
                         if (!facingRight && CurrentFrame > 4)
                         {
@@ -86,8 +86,8 @@ namespace NBerzerk
                 }
 
 
-                if (KeyboardState.IsPressed(Key.Up) || KeyboardState.IsPressed(Key.Down) ||
-                    KeyboardState.IsPressed(Key.Left) || KeyboardState.IsPressed(Key.Right))
+                if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.Down) ||
+                    KeyboardState.IsKeyDown(Keys.Left) || KeyboardState.IsKeyDown(Keys.Right))
                 {
                     if (gameTime.TotalGameTime - lastFrameUpdate > playerAnimationSpeed)
                     {
