@@ -38,14 +38,16 @@ namespace NBerzerk
 
         StateManager<ComponentFramework.GameObject> screenStateManager = new StateManager<ComponentFramework.GameObject>();
 
+        Screen screen = new Screen(256, 224, 4, 4);
+
         public NBerzerkGame()
-        {
+        {            
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             keyboardManager = new KeyboardManager(this);
             Content.Resolvers.Add(new EmbeddedResourceResolver());
 
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
 
             keyboard = new Keyboard(new DirectInput());
             keyboard.Acquire();
@@ -98,15 +100,17 @@ namespace NBerzerk
             base.Initialize();
         }
 
-        public Size2 Resolution { get { return new Size2(256, 224); } }
-
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
             var scaleMatrix = Matrix.Scaling(2.0f, 2.0f, 1.0f);
             spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.NonPremultiplied, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
-            screenStateManager.CurrentState.Draw(spriteBatch);
+
+            screen.Clear();
+            screenStateManager.CurrentState.Draw(screen);
+            screen.Draw(spriteBatch);
+
             spriteBatch.End();
 
             spriteBatch.Begin();

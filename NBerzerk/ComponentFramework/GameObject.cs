@@ -14,30 +14,19 @@ namespace NBerzerk.ComponentFramework
 {
     public class GameObject : IGameObject, IPositionable, IMovable, ISizable, IState
     {
-        private Vector2 position;
-
-        public Vector2 Position
-        {
-            get { return position; }
-            set { position = value; }
-        }
+        public Vector2 Position { get; set; }
 
         public void MoveTo(Vector2 position)
         {
-            this.position = position;
+            Position = position;
         }
 
         public void Move(Vector2 amount)
         {
-            position += amount;
+            Position += amount;
         }
 
-        private Vector2 size;
-        public Vector2 Size
-        {
-            get { return size; }
-            set { size = value; }
-        }
+        public Vector2 Size { get; set; }
 
         public Rectangle BoundingBox
         {
@@ -47,17 +36,9 @@ namespace NBerzerk.ComponentFramework
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-        }
-
-        public virtual void LoadContent(IContentManager mgr)
-        {
-        }
+        public virtual void Draw(Screen screen) { }
+        public virtual void Update(GameTime gameTime) { }
+        public virtual void LoadContent(IContentManager mgr) { }
 
         public SharpDX.Toolkit.Input.KeyboardState KeyboardState
         {

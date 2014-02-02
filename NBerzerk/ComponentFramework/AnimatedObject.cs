@@ -15,6 +15,7 @@ namespace NBerzerk.ComponentFramework
     public class AnimatedObject : GameObject
     {
         string spriteSheetAssetName;
+        bool[,] textureBits;
         Texture2D spriteSheet;
 
         public int CurrentFrame { get; set; }
@@ -32,16 +33,20 @@ namespace NBerzerk.ComponentFramework
         public override void LoadContent(IContentManager mgr)
         {
             spriteSheet = mgr.Load<Texture2D>(spriteSheetAssetName);
+            textureBits = SpriteBatchHelper.GetTextureBits(spriteSheet);
         }
 
-        public override void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
+        public override void Draw(Screen screen)
         {
             if (Show)
             {
                 var destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
                 var sourceRectangle = new Rectangle(CurrentFrame * (int)Size.X, 0, (int)Size.X, (int)Size.Y);
 
-                spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, CurrentColor, 0.0f, Vector2.One, SpriteEffects.None, 0f);
+                if (sourceRectangle.Right < textureBits.GetLength(0))
+                {
+                    screen.Draw(textureBits, destinationRectangle, sourceRectangle, CurrentColor);
+                }
             }
         }
     }

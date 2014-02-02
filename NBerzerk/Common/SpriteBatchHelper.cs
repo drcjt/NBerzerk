@@ -22,10 +22,40 @@ namespace NBerzerk
             }
         }
 
-        public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, Color color)
+        public static void DrawPixel(this SpriteBatch spriteBatch, Vector2 position, Color color)
         {
             LoadPixel(spriteBatch.GraphicsDevice);
-            spriteBatch.Draw(pixel, rectangle, color);
+            spriteBatch.Draw(pixel, position, color);
+        }
+
+        /// <summary>
+        /// Converts a texture into a bool array
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <returns></returns>
+        public static bool[,] GetTextureBits(Texture2D texture)
+        {
+            Color[] texturePixels = new Color[texture.Width * texture.Height];
+            texture.GetData(texturePixels);
+
+            bool[,] textureBits = new bool[texture.Width, texture.Height];
+
+            for (int x = 0; x < texture.Width; x++)
+            {
+                for (int y = 0; y < texture.Height; y++)
+                {
+                    if (texturePixels[(y * texture.Width) + x] == Color.White)
+                    {
+                        textureBits[x, y] = true;
+                    }
+                    else
+                    {
+                        textureBits[x, y] = false;
+                    }
+                }
+            }
+
+            return textureBits;
         }
     }
 }

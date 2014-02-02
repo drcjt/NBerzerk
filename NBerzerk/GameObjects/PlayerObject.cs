@@ -48,6 +48,19 @@ namespace NBerzerk
         private TimeSpan lastMoveTime = new TimeSpan();
         private TimeSpan lastFrameUpdate = new TimeSpan();
 
+        public override void Draw(Screen screen)
+        {
+            base.Draw(screen);
+
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 6 ; y++)
+                {
+                    screen.SetColorPixel(((int)Position.X / 4) + x, ((int)Position.Y / 4) + y, CurrentColor);
+                }
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (!Electrocuting)

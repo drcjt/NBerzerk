@@ -15,13 +15,10 @@ namespace NBerzerk
     public class RoomObject : GameObject
     {
         private WallObject[] edgeWalls = new WallObject[8];
-
 		private WallObject[] mazeWalls = new WallObject[8];
-
         private WallObject doorWall = new WallObject(0, 0, 0, 0);
 
 		private string maze;
-
         public string Maze { get { return maze; } set { maze = value; UpdateMazeWalls(); } }
 
         private char closedDoor;
@@ -123,19 +120,19 @@ namespace NBerzerk
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {   
+        public override void Draw(Screen screen)
+        {
             foreach (var edgeWall in edgeWalls)
             {
-                edgeWall.Draw(spriteBatch);
+                edgeWall.Draw(screen);
             }
-            
-            doorWall.Draw(spriteBatch);
+
+            doorWall.Draw(screen);
 
             foreach (var mazeWall in mazeWalls)
             {
-                mazeWall.Draw(spriteBatch);
-            }   
+                mazeWall.Draw(screen);
+            }
         }
     }
 }

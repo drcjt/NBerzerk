@@ -27,9 +27,9 @@ namespace NBerzerk
             Size = new Vector2(width, height);
         }
 
-        public override void Draw(SharpDX.Toolkit.Graphics.SpriteBatch spriteBatch)
+        public override void Draw(Screen screen)
         {
-            spriteBatch.DrawRectangle(BoundingBox, Color);
+            screen.DrawRectangle(BoundingBox, Color);
         }
     }
 }

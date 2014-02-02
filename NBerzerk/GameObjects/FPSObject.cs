@@ -15,7 +15,7 @@ using NBerzerk.ComponentFramework;
 
 namespace NBerzerk
 {
-    public class FPSObject : GameObject
+    public class FPSObject
     {
         private SpriteFont fpsFont;
         public readonly Stopwatch fpsClock = new Stopwatch();
@@ -23,13 +23,21 @@ namespace NBerzerk
         private int frameCount = 0;
         public bool ShowFramesPerSecond { get; set; }
 
-        public override void LoadContent(IContentManager mgr)
+        public SharpDX.Toolkit.Input.KeyboardState KeyboardState
+        {
+            get
+            {
+                return NBerzerkGame.keyboardManager.GetState();
+            }
+        }
+
+        public void LoadContent(IContentManager mgr)
         {
             fpsFont = mgr.Load<SpriteFont>("NBerzerk.Resources.Arial16");
             oldState = KeyboardState;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             // Update the FPS text
             frameCount++;
@@ -49,7 +57,7 @@ namespace NBerzerk
 
         KeyboardState oldState;
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             KeyboardState newState = KeyboardState;
 

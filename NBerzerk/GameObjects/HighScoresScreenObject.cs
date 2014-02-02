@@ -46,22 +46,22 @@ namespace NBerzerk
             oldState = KeyboardState;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(Screen screen)
         {
-            textRendererObject.DrawText("High Scores", new Vector2(88, 1), new Color(0, 255, 0, 255), spriteBatch);
+            textRendererObject.DrawText("High Scores", new Vector2(88, 1), new Color(0, 255, 0, 255), screen);
 
-            spriteBatch.DrawRectangle(new Rectangle(0, 16, 256, 2), Color.White);
+            screen.DrawRectangle(new Rectangle(0, 16, 256, 2), Color.White);
 
-            spriteBatch.DrawRectangle(new Rectangle(0, 184, 256, 2), new Color(108, 108, 108, 255));
-            textRendererObject.DrawText(textMessage, new Vector2(12, 190), new Color(108, 108, 108, 255), spriteBatch);
-            spriteBatch.DrawRectangle(new Rectangle(0, 204, 256, 2), new Color(108, 108, 108, 255));
+            screen.DrawRectangle(new Rectangle(0, 184, 256, 2), new Color(108, 108, 108, 255));
+            textRendererObject.DrawText(textMessage, new Vector2(12, 190), new Color(108, 108, 108, 255), screen);
+            screen.DrawRectangle(new Rectangle(0, 204, 256, 2), new Color(108, 108, 108, 255));
 
-            textRendererObject.DrawText(string.Format("{0,6:#####0}", PlayerOneHighestScore), new Vector2(40-39, 213), new Color(0, 255, 0, 255), spriteBatch);
+            textRendererObject.DrawText(string.Format("{0,6:#####0}", PlayerOneHighestScore), new Vector2(40 - 39, 213), new Color(0, 255, 0, 255), screen);
             if (PlayerTwoHighestScore.HasValue)
             {
-                textRendererObject.DrawText(string.Format("{0,6:#####0}", PlayerTwoHighestScore), new Vector2(216 - 39, 213), new Color(255, 0, 255, 255), spriteBatch);
+                textRendererObject.DrawText(string.Format("{0,6:#####0}", PlayerTwoHighestScore), new Vector2(216 - 39, 213), new Color(255, 0, 255, 255), screen);
             }
-            textRendererObject.DrawText(string.Format("{0,2:#0}", Credits), new Vector2(128 - 8, 213), new Color(108, 108, 108, 255), spriteBatch);
+            textRendererObject.DrawText(string.Format("{0,2:#0}", Credits), new Vector2(128 - 8, 213), new Color(108, 108, 108, 255), screen);
         }
 
         KeyboardState oldState;

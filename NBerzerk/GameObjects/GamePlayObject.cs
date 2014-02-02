@@ -67,14 +67,14 @@ namespace NBerzerk
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(Screen screen)
         {
-            roomObject.Draw(spriteBatch);
-            playerObject.Draw(spriteBatch);
+            roomObject.Draw(screen);
+            playerObject.Draw(screen);
 
             foreach (var robotObject in robotObjects)
             {
-                robotObject.Draw(spriteBatch);
+                robotObject.Draw(screen);
             }
         }
 
@@ -100,6 +100,7 @@ namespace NBerzerk
 
             if (playerObject.Electrocuting && playerObject.electrocutionFrame > 22)
             {
+                playerObject.CurrentFrame = 0;
                 playerObject.Electrocuting = false;
                 playerObject.electrocutionFrame = 0;
                 changeRoom = true;

@@ -12,16 +12,14 @@ namespace NBerzerk.ComponentFramework
 {
     public class TextRendererObject : GameObject
     {
-        Texture2D spriteSheet;
-        Texture2D updatedSpriteSheet;
-        Color[] imageData;
+        bool[,] charsetTextureBits;
         bool[] descender;
 
         public override void LoadContent(IContentManager mgr)
         {
-            spriteSheet = mgr.Load<Texture2D>("NBerzerk.Resources.charset.png");
+            Texture2D spriteSheet = mgr.Load<Texture2D>("NBerzerk.Resources.charset.png");
 
-            imageData = new Color[spriteSheet.Width * spriteSheet.Height];
+            Color[] imageData = new Color[spriteSheet.Width * spriteSheet.Height];
             spriteSheet.GetData(imageData);
 
             descender = new bool[spriteSheet.Width / 8];
@@ -31,14 +29,13 @@ namespace NBerzerk.ComponentFramework
                 imageData[index * 8] = Color.Transparent;
             }
 
-            updatedSpriteSheet = Texture2D.New(spriteSheet.GraphicsDevice, spriteSheet.Width, spriteSheet.Height, PixelFormat.B8G8R8A8.UNorm);
+            Texture2D updatedSpriteSheet = Texture2D.New(spriteSheet.GraphicsDevice, spriteSheet.Width, spriteSheet.Height, PixelFormat.B8G8R8A8.UNorm);
             updatedSpriteSheet.SetData(imageData);
 
-            // This doesn't work - needs fixing
-            //spriteSheet.SetData(imageData);
+            charsetTextureBits = SpriteBatchHelper.GetTextureBits(updatedSpriteSheet);
         }
 
-        public void DrawText(string text, Vector2 position, Color color, SpriteBatch spriteBatch)
+        public void DrawText(string text, Vector2 position, Color color, Screen screen)
         {
             var x = (int)position.X;
             foreach (var c in text)
@@ -52,7 +49,7 @@ namespace NBerzerk.ComponentFramework
                     destinationRectangle = new Rectangle(x, (int)position.Y + 3, 8, 9);
                 }
 
-                spriteBatch.Draw(updatedSpriteSheet, destinationRectangle, sourceRectangle, color, 0.0f, Vector2.One, SpriteEffects.None, 0f);
+                screen.Draw(charsetTextureBits, destinationRectangle, sourceRectangle, color);
 
                 x += 8;
             }

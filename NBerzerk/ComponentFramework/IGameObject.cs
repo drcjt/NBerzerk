@@ -15,7 +15,7 @@ namespace NBerzerk.ComponentFramework
     public interface IGameObject
     {
         KeyboardState KeyboardState { get; }
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(Screen screen);
         void Update(GameTime gameTime);
         void LoadContent(IContentManager mgr);
     }

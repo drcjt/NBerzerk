@@ -106,6 +106,7 @@
   <ItemGroup>
     <Compile Include="Common\EmbeddedResourceResolver.cs" />
     <Compile Include="Common\RectangleExtensions.cs" />
+    <Compile Include="Common\Screen.cs" />
     <Compile Include="Common\StateManager.cs" />
     <Compile Include="ComponentFramework\AnimatedObject.cs" />
     <Compile Include="ComponentFramework\TextRendererObject.cs" />
