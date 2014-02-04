@@ -105,7 +105,7 @@ namespace NBerzerk
             GraphicsDevice.Clear(Color.Black);
 
             var scaleMatrix = Matrix.Scaling(2.0f, 2.0f, 1.0f);
-            spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.NonPremultiplied, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, GraphicsDevice.BlendStates.Default, GraphicsDevice.SamplerStates.PointClamp, null, GraphicsDevice.RasterizerStates.CullNone, null, scaleMatrix);
 
             screen.Clear();
             screenStateManager.CurrentState.Draw(screen);

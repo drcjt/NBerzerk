@@ -70,12 +70,13 @@ namespace NBerzerk
         public override void Draw(Screen screen)
         {
             roomObject.Draw(screen);
-            playerObject.Draw(screen);
 
             foreach (var robotObject in robotObjects)
             {
                 robotObject.Draw(screen);
             }
+
+            playerObject.Draw(screen);
         }
 
         public override void Update(GameTime gameTime)

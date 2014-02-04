@@ -56,7 +56,10 @@ namespace NBerzerk
             {
                 for (int y = 0; y < 6 ; y++)
                 {
-                    screen.SetColorPixel(((int)Position.X / 4) + x, ((int)Position.Y / 4) + y, CurrentColor);
+                    if (((int)Position.X / 4) + x < 64 && ((int)Position.Y / 4) + y < 56)
+                    {
+                        screen.SetColorPixel(((int)Position.X / 4) + x, ((int)Position.Y / 4) + y, CurrentColor);
+                    }
                 }
             }
         }

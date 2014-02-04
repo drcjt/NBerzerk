@@ -12,10 +12,11 @@ namespace NBerzerk
     public class Screen
     {
         internal bool[,] screenPixels;
-        internal bool[,] drawPixels;
         internal Color[,] colorPixels;
         private int colorBlockWidth;
         private int colorBlockHeight;
+
+        private Texture2D screenTexture;
 
         public Screen(int pixelWidth, int pixelHeight, int colorBlockWidth, int colorBlockHeight)
         {
@@ -23,14 +24,12 @@ namespace NBerzerk
             this.colorBlockHeight = colorBlockHeight;
 
             screenPixels = new bool[pixelWidth, pixelHeight];
-            drawPixels = new bool[pixelWidth, pixelHeight];
             colorPixels = new Color[pixelWidth / colorBlockWidth, pixelHeight / colorBlockHeight];
         }
 
         public void Clear()
         {
             Array.Clear(screenPixels, 0, screenPixels.Length);
-            Array.Clear(drawPixels, 0, drawPixels.Length);
             Array.Clear(colorPixels, 0, colorPixels.Length);
         }
 
@@ -42,7 +41,6 @@ namespace NBerzerk
         public void SetScreenPixel(int x, int y, bool state)
         {
             screenPixels[x, y] = state;
-            drawPixels[x, y] = true;
         }
 
         public void SetScreenPixel(int x, int y, bool state, Color color)
@@ -81,33 +79,34 @@ namespace NBerzerk
         public void SetColorPixel(int x, int y, Color color)
         {
             colorPixels[x, y] = color;
-
-            for (int pixelX = x * colorBlockWidth; pixelX < (x + 1) * colorBlockWidth; pixelX++)
-            {
-                for (int pixelY = y * colorBlockHeight; pixelY < (y + 1) * colorBlockHeight; pixelY++)
-                {
-                    drawPixels[pixelX, pixelY] = true;
-                }
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int x = 0; x < screenPixels.GetLength(0); x++)
+            if (screenTexture == null)
             {
-                for (int y = 0; y < screenPixels.GetLength(1); y++)
-                {
-                    if (drawPixels[x, y])
-                    {
-                        if (screenPixels[x, y])
-                        {
-                            SpriteBatchHelper.DrawPixel(spriteBatch, new Vector2(x, y), colorPixels[x / colorBlockWidth, y / colorBlockHeight]);
-                        }
+                screenTexture = Texture2D.New(spriteBatch.GraphicsDevice, screenPixels.GetLength(0), screenPixels.GetLength(1), PixelFormat.R8G8B8A8.UNorm);
+            }
 
-                        drawPixels[x, y] = false;
+            Color[] texturePixels = new Color[screenPixels.GetLength(0) * screenPixels.GetLength(1)];
+
+            int pixelIndex = 0;
+            for (int y = 0; y < screenPixels.GetLength(1); y++)
+            { 
+                for (int x = 0; x < screenPixels.GetLength(0); x++)
+                {
+                    if (screenPixels[x,y])
+                    {
+                        texturePixels[pixelIndex++] = colorPixels[x / colorBlockWidth, y / colorBlockHeight];
+                    }
+                    else
+                    {
+                        texturePixels[pixelIndex++] = Color.Black;
                     }
                 }
             }
+            screenTexture.SetData<Color>(texturePixels);
+            spriteBatch.Draw(screenTexture, new Vector2(0f, 0f), Color.White);
         }
     }
 }
