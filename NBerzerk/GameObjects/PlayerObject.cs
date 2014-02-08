@@ -52,13 +52,29 @@ namespace NBerzerk
         {
             base.Draw(screen);
 
+
+            // Calculate left top position of color boxes covering the man
+            // This is 4x6 color boxes - with each box being 4x4 pixels.
+            // The colors in these color boxes are set to the same color
+            // as the man. This can be seen when the man walks close to a
+            // wall as the wall will change to be the same color as the man
+            // until the man walks away again.
+
+            // Note that for the cx position it is important to divide first
+            // by 8 and then multiply by 2. This is not the same as dividing
+            // by 4 due to rounding that occurs after the initial divide by 8!
+            int cy = (int)Position.Y / 4;
+            int cx = (int)Position.X / 8; 
+            cx = cx * 2;           
+
+            // Color the man 
             for (int x = 0; x < 4; x++)
             {
                 for (int y = 0; y < 6 ; y++)
                 {
-                    if (((int)Position.X / 4) + x < 64 && ((int)Position.Y / 4) + y < 56)
+                    if (cx + x < 64 && cy + y < 56)
                     {
-                        screen.SetColorPixel(((int)Position.X / 4) + x, ((int)Position.Y / 4) + y, CurrentColor);
+                        screen.SetColor(cx + x, cy + y, CurrentColor);
                     }
                 }
             }

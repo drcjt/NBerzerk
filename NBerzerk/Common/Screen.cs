@@ -11,42 +11,40 @@ namespace NBerzerk
 {
     public class Screen
     {
-        internal bool[,] screenPixels;
-        internal Color[,] colorPixels;
+        internal bool[,] pixels;
+        internal Color[,] colors;
         private int colorBlockWidth;
         private int colorBlockHeight;
-
-        private Texture2D screenTexture;
 
         public Screen(int pixelWidth, int pixelHeight, int colorBlockWidth, int colorBlockHeight)
         {
             this.colorBlockWidth = colorBlockWidth;
             this.colorBlockHeight = colorBlockHeight;
 
-            screenPixels = new bool[pixelWidth, pixelHeight];
-            colorPixels = new Color[pixelWidth / colorBlockWidth, pixelHeight / colorBlockHeight];
+            pixels = new bool[pixelWidth, pixelHeight];
+            colors = new Color[pixelWidth / colorBlockWidth, pixelHeight / colorBlockHeight];
         }
 
         public void Clear()
         {
-            Array.Clear(screenPixels, 0, screenPixels.Length);
-            Array.Clear(colorPixels, 0, colorPixels.Length);
+            Array.Clear(pixels, 0, pixels.Length);
+            Array.Clear(colors, 0, colors.Length);
         }
 
-        public bool GetScreenPixel(int x, int y)
+        public bool GetPixel(int x, int y)
         {
-            return screenPixels[x, y];
+            return pixels[x, y];
         }
 
-        public void SetScreenPixel(int x, int y, bool state)
+        public void SetPixel(int x, int y, bool state)
         {
-            screenPixels[x, y] = state;
+            pixels[x, y] = state;
         }
 
-        public void SetScreenPixel(int x, int y, bool state, Color color)
+        public void SetPixel(int x, int y, bool state, Color color)
         {
-            screenPixels[x, y] = state;
-            SetColorPixel(x / colorBlockWidth, y / colorBlockHeight, color);
+            pixels[x, y] = state;
+            SetColor(x / colorBlockWidth, y / colorBlockHeight, color);
         }
 
         public void DrawRectangle(Rectangle rect, Color c)
@@ -55,7 +53,7 @@ namespace NBerzerk
             {
                 for (int y = 0; y < rect.Height; y++)
                 {
-                    SetScreenPixel(rect.Left + x, rect.Top + y, true, c);
+                    SetPixel(rect.Left + x, rect.Top + y, true, c);
                 }
             }
         }
@@ -66,38 +64,43 @@ namespace NBerzerk
             {
                 for (int y = 0; y < sourceRectangle.Height; y++)
                 {
-                    SetScreenPixel(destinationRectangle.Left + x, destinationRectangle.Top + y, textureBits[sourceRectangle.Left + x, sourceRectangle.Top + y], color);
+                    SetPixel(destinationRectangle.Left + x, destinationRectangle.Top + y, textureBits[sourceRectangle.Left + x, sourceRectangle.Top + y], color);
                 }
             }
         }
 
-        public Color GetColorPixel(int x, int y)
+        public Color GetColor(int x, int y)
         {
-            return colorPixels[x, y];
+            return colors[x, y];
         }
 
-        public void SetColorPixel(int x, int y, Color color)
+        public void SetColor(int x, int y, Color color)
         {
-            colorPixels[x, y] = color;
+            colors[x, y] = color;
         }
+
+        private Texture2D screenTexture;
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // Create the texture to use to render the virtual framebuffer of the screen
             if (screenTexture == null)
             {
-                screenTexture = Texture2D.New(spriteBatch.GraphicsDevice, screenPixels.GetLength(0), screenPixels.GetLength(1), PixelFormat.R8G8B8A8.UNorm);
+                // Need to wait till now to create this as need to use the GraphicsDevice in creation
+                screenTexture = Texture2D.New(spriteBatch.GraphicsDevice, pixels.GetLength(0), pixels.GetLength(1), PixelFormat.R8G8B8A8.UNorm);
             }
 
-            Color[] texturePixels = new Color[screenPixels.GetLength(0) * screenPixels.GetLength(1)];
+            // Convert the pixels & colors to a 1D array of Colors
+            Color[] texturePixels = new Color[pixels.GetLength(0) * pixels.GetLength(1)];
 
             int pixelIndex = 0;
-            for (int y = 0; y < screenPixels.GetLength(1); y++)
+            for (int y = 0; y < pixels.GetLength(1); y++)
             { 
-                for (int x = 0; x < screenPixels.GetLength(0); x++)
+                for (int x = 0; x < pixels.GetLength(0); x++)
                 {
-                    if (screenPixels[x,y])
+                    if (pixels[x,y])
                     {
-                        texturePixels[pixelIndex++] = colorPixels[x / colorBlockWidth, y / colorBlockHeight];
+                        texturePixels[pixelIndex++] = colors[x / colorBlockWidth, y / colorBlockHeight];
                     }
                     else
                     {
@@ -105,7 +108,11 @@ namespace NBerzerk
                     }
                 }
             }
+
+            // Set the texture data
             screenTexture.SetData<Color>(texturePixels);
+
+            // Render the virtual framebuffer representing the screen using the texture
             spriteBatch.Draw(screenTexture, new Vector2(0f, 0f), Color.White);
         }
     }
