@@ -39,6 +39,7 @@
         <File Name="SharpDX.dll" Source="$(var.NBerzerk.TargetDir)"/>
         <File Name="SharpDX.DXGI.dll" Source="$(var.NBerzerk.TargetDir)"/>
         <File Name="SharpDX.Toolkit.dll" Source="$(var.NBerzerk.TargetDir)"/>
+        <File Name="SharpDX.Toolkit.Input.dll" Source="$(var.NBerzerk.TargetDir)"/>
         <File Name="SharpDX.Toolkit.Game.dll" Source="$(var.NBerzerk.TargetDir)"/>
         <File Name="SharpDX.Toolkit.Graphics.dll" Source="$(var.NBerzerk.TargetDir)"/>
         <File Name="SharpDX.DirectInput.dll" Source="$(var.NBerzerk.TargetDir)"/>
