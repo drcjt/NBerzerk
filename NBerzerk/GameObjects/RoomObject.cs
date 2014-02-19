@@ -12,23 +12,54 @@ using NBerzerk.ComponentFramework;
 
 namespace NBerzerk
 {
+    enum WallDirection
+    {
+        North,
+        South,
+        East,
+        West
+    };
+
+    [Flags]
+    public enum Cell
+    {
+        Left = 1,
+        Right = 2,
+        Top = 4,
+        Bottom = 8
+    }
+
     public class RoomObject : GameObject
     {
         private WallObject[] edgeWalls = new WallObject[8];
-		private WallObject[] mazeWalls = new WallObject[8];
+		private WallObject[,] mazeWalls = new WallObject[4,2];
         private WallObject doorWall = new WallObject(0, 0, 0, 0);
 
-		private string maze;
-        public string Maze { get { return maze; } set { maze = value; UpdateMazeWalls(); } }
+        // Represents the individual cells in the room
+        // determining the walls adjacent to the cell
+        Cell[,] cells = new Cell[5, 3];
+
+        public Cell GetCell(Vector2 position)
+        {
+            return cells[((int)position.X - 10) / 48, (int)position.Y / 69];
+        }
+
+        public int GetCellIndex(Vector2 position)
+        {
+            return (((int)position.Y / 69) * 5) + (((int)position.X - 10) / 48);
+        }
 
         private char closedDoor;
         public char ClosedDoor { get { return closedDoor; } set { closedDoor = value; UpdateDoorWall(); } }
 
         public RoomObject()
         {
-            for (var mazeWallIndex = 0; mazeWallIndex < mazeWalls.Length; mazeWallIndex++)
+            for (var column = 0; column < 4; column++)
             {
-                mazeWalls[mazeWallIndex] = new WallObject();
+                for (var row = 0; row < 2; row++)
+                {
+                    mazeWalls[column, row] = new WallObject();
+                }
             }
 
             edgeWalls[0] = new WallObject(4, 0, 100, 4);
@@ -68,55 +99,56 @@ namespace NBerzerk
         {
             if (ClosedDoor == 'W')
             {
-                doorWall.MoveTo(new Vector2(5, 72));
+                doorWall.MoveTo(5, 72);
                 doorWall.Size = new Vector2(2, 64);
             }
             else if (closedDoor == 'E')
             {
-                doorWall.MoveTo(new Vector2(249, 72));
+                doorWall.MoveTo(249, 72);
                 doorWall.Size = new Vector2(2, 64);
             }
             else if (closedDoor == 'N')
             {
-                doorWall.MoveTo(new Vector2(104, 1));
+                doorWall.MoveTo(104, 1);
                 doorWall.Size = new Vector2(48, 2);
             }
             else if (closedDoor == 'S')
             {
-                doorWall.MoveTo(new Vector2(104, 205));
+                doorWall.MoveTo(104, 205);
                 doorWall.Size = new Vector2(48, 2);
             }
             else
             {
-                doorWall.MoveTo(new Vector2(0, 0));
+                doorWall.MoveTo(0, 0);
                 doorWall.Size = new Vector2(0, 0);
             }
         }
 
-		private void UpdateMazeWalls()
+		private void UpdateMazeWalls(WallDirection[,] walls)
         {
-            for (var pillarIndex = 0; pillarIndex < 8; pillarIndex++)
+            for (var column = 0; column < 4; column++)
             {
-                var pillarLocation = new Point(56 + (pillarIndex % 4) * 48, pillarIndex < 4 ? 68 : 136);
-
-                var wallDirection = Maze[pillarIndex];
-
-                Vector2 pillarPosition;
-                pillarPosition.X = (wallDirection == 'W') ? pillarLocation.X - 48 : pillarLocation.X;
-                pillarPosition.Y = (wallDirection == 'N') ? pillarLocation.Y - 68 : pillarLocation.Y;
-                mazeWalls[pillarIndex].MoveTo(pillarPosition);
-
-                Vector2 wallSize;
-                wallSize.X = (wallDirection == 'N' || wallDirection == 'S') ? 4 : 52;
-                wallSize.Y = (wallDirection == 'N' || wallDirection == 'S') ? 72 : 4;
-
-                // Walls drawn westwards don't include the starting pillar!
-                if (wallDirection == 'W')
+                for (var row = 0; row < 2; row++)
                 {
-                    wallSize.X -= 4;
-                }
+                    var pillarLocation = new Point(56 + column * 48, 68 * (row + 1));
+                    var wallDirection = walls[column, row];
 
-                mazeWalls[pillarIndex].Size = wallSize;
+                    int pillarPositionX = (wallDirection == WallDirection.West) ? pillarLocation.X - 48 : pillarLocation.X;
+                    int pillarPositionY = (wallDirection == WallDirection.North) ? pillarLocation.Y - 68 : pillarLocation.Y;
+                    mazeWalls[column, row].MoveTo(pillarPositionX, pillarPositionY);
+
+                    Vector2 wallSize;
+                    wallSize.X = (wallDirection == WallDirection.North || wallDirection == WallDirection.South) ? 4 : 52;
+                    wallSize.Y = (wallDirection == WallDirection.North || wallDirection == WallDirection.South) ? 72 : 4;
+
+                    // Walls drawn westwards don't include the starting pillar!
+                    if (wallDirection == WallDirection.West)
+                    {
+                        wallSize.X -= 4;
+                    }
+
+                    mazeWalls[column, row].Size = wallSize;
+                }
             }
         }
 
@@ -133,6 +165,83 @@ namespace NBerzerk
             {
                 mazeWall.Draw(screen);
             }
+        }
+
+        public void GenerateRoom(UInt16 roomNumber)
+        {
+            // Walls in each of screen cells, 5 wide by 3 high.
+            // bit 1 = wall on left
+            // bit 2 = wall on right
+            // bit 3 = wall on top
+            // bit 4 = wall on bottom.
+            //int[,] walls = new int[5, 3];
+
+            RandomNumberGenerator.seed = roomNumber;
+
+            WallDirection[,] walls = new WallDirection[4, 2];
+
+            Array.Clear(cells, 0, cells.Length);
+
+            for (var row = 0; row < 2; row++)
+            {
+                for (var column = 0; column < 4; column++)
+                {
+                    RandomNumberGenerator.GetRandomNumber();
+                    UInt16 pillarValue = RandomNumberGenerator.GetRandomNumber();
+                    WallDirection wallDirection = GetNextWall(pillarValue);
+                    walls[column, row] = wallDirection;
+
+                    switch (wallDirection)
+                    {
+                        case WallDirection.North:
+                            cells[column, row] |= Cell.Right;
+                            cells[column + 1, row] |= Cell.Left;
+                            break;
+
+                        case WallDirection.South:
+                            cells[column, row + 1] |= Cell.Right;
+                            cells[column + 1, row + 1] |= Cell.Left;
+                            break;
+
+                        case WallDirection.East:
+                            cells[column + 1, row] |= Cell.Bottom;
+                            cells[column + 1, row + 1] |= Cell.Top;
+                            break;
+
+                        case WallDirection.West:
+                            cells[column, row] |= Cell.Bottom;
+                            cells[column, row + 1] |= Cell.Top;
+                            break;
+                    }
+                }
+            }
+
+            for (var column = 0; column < 5; column++)
+            {
+                cells[column, 0] |= Cell.Top;
+                cells[column, 2] |= Cell.Bottom;
+            }
+
+            for (var row = 0; row < 3; row++)
+            {
+                cells[0, row] |= Cell.Left;
+                cells[4, row] |= Cell.Right;
+            }
+
+            UpdateMazeWalls(walls);
+        }
+
+        /// <summary>
+        /// Convert the 16 bit number generated from the random number generator
+        /// into a wall direction. This is done by taking the high 8 bits and
+        /// looking at the 2 low bits of this.
+        /// </summary>
+        /// <param name="pillarValue">pillar value to get wall direction from</param>
+        /// <returns>wall direction, i.e North, South, East, or West</returns>
+        private WallDirection GetNextWall(UInt16 pillarValue)
+        {
+            var wallBits = (UInt16)(pillarValue & 3);
+            return WallDirection.North + wallBits;
         }
     }
 }

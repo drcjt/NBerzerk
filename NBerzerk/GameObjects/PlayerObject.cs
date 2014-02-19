@@ -18,9 +18,17 @@ namespace NBerzerk
     {
         private bool facingRight = true;
 
-        public bool Electrocuting { get; set; }
-
-        public int electrocutionFrame = 0;
+        public bool Electrocuting
+        {
+            get
+            {
+                return CurrentPattern == "electrocuting";
+            }
+            set
+            {
+                CurrentPattern = value ? "electrocuting" : "still";
+            }
+        }
 
         private Color[] electrocutionColors = new Color[] 
         { 
@@ -31,27 +39,48 @@ namespace NBerzerk
             new Color(255, 255, 0, 255), 
             new Color(0, 108, 108, 255), 
             new Color(255, 0, 255, 255), 
-            new Color(0, 255, 0, 255) 
+            new Color(0, 255, 0, 255),
+
+            new Color(0, 0, 108, 255), 
+            new Color(255, 0, 0, 255), 
+            new Color(0, 108, 0, 255), 
+            new Color(108, 0, 108, 255), 
+            new Color(255, 255, 0, 255), 
+            new Color(0, 108, 108, 255), 
+            new Color(255, 0, 255, 255), 
+            new Color(0, 255, 0, 255),
+
+            new Color(0, 0, 108, 255), 
+            new Color(255, 0, 0, 255), 
+            new Color(0, 108, 0, 255), 
+            new Color(108, 0, 108, 255), 
+            new Color(255, 255, 0, 255), 
+            new Color(0, 108, 108, 255)
         };
 
         public PlayerObject() : base("NBerzerk.Resources.player.png")
         {
-            Size = new Vector2(8, 17);
-            Electrocuting = false;
+            AddPattern("still", new int[] { 0 });
+            AddPattern("east", new int[] { 0, 1, 2, 3, 4});
+            AddPattern("west", new int[] { 5, 6, 7, 8, 9 });
+            AddPattern("electrocuting", new int[] { 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 12}, electrocutionColors);
+            CurrentPattern = "still";
 
-            MoveTo(new Vector2(30, 99));
+            AnimationSpeed = new TimeSpan(0, 0, 0, 0, 50);
+
+            Size = new Vector2(8, 17);
+
+            MoveTo(30, 99);
         }
 
         private readonly TimeSpan playerMoveSpeed = new TimeSpan(0, 0, 0, 0, 33);
         private readonly TimeSpan playerAnimationSpeed = new TimeSpan(0, 0, 0, 0, 50);
 
         private TimeSpan lastMoveTime = new TimeSpan();
-        private TimeSpan lastFrameUpdate = new TimeSpan();
 
         public override void Draw(Screen screen)
         {
             base.Draw(screen);
-
 
             // Calculate left top position of color boxes covering the man
             // This is 4x6 color boxes - with each box being 4x4 pixels.
@@ -87,83 +116,35 @@ namespace NBerzerk
                 CurrentColor = new Color(0, 255, 0, 255);
                 if (gameTime.TotalGameTime - lastMoveTime > playerMoveSpeed)
                 {
+                    string newPattern = "still";
                     if (KeyboardState.IsKeyDown(Keys.Up))
                     {
-                        Move(new Vector2(0, -1));
+                        Move(0, -1);
+                        newPattern = "east";
                     }
                     if (KeyboardState.IsKeyDown(Keys.Down))
                     {
-                        Move(new Vector2(0, 1));
+                        Move(0, 1);
+                        newPattern = "east";
                     }
                     if (KeyboardState.IsKeyDown(Keys.Left))
                     {
-                        if (facingRight && CurrentFrame < 5)
-                        {
-                            CurrentFrame = 5;
-                            facingRight = false;
-                        }
-                        Move(new Vector2(-1, 0));
+                        Move(-1, 0);
+                        newPattern = "west";
                     }
                     if (KeyboardState.IsKeyDown(Keys.Right))
                     {
-                        if (!facingRight && CurrentFrame > 4)
-                        {
-                            CurrentFrame = 0;
-                            facingRight = true;
-                        }
-                        Move(new Vector2(1, 0));
+                        Move(1, 0);
+                        newPattern = "east";
                     }
+
+                    CurrentPattern = newPattern;
 
                     lastMoveTime = gameTime.TotalGameTime;
                 }
-
-
-                if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.Down) ||
-                    KeyboardState.IsKeyDown(Keys.Left) || KeyboardState.IsKeyDown(Keys.Right))
-                {
-                    if (gameTime.TotalGameTime - lastFrameUpdate > playerAnimationSpeed)
-                    {
-                        CurrentFrame++;
-                        lastFrameUpdate = gameTime.TotalGameTime;
-                    }
-
-                    if (CurrentFrame == 4)
-                    {
-                        CurrentFrame = 0;
-                    }
-
-                    if (CurrentFrame == 9)
-                    {
-                        CurrentFrame = 5;
-                    }
-                }
-                else
-                {
-                    CurrentFrame = 0;
-                    facingRight = true;
-                }
             }
-            else
-            {
-                if (CurrentFrame < 10)
-                {
-                    CurrentFrame = 10;
-                }
 
-                if (gameTime.FrameCount % 5 == 0)
-                {
-                    CurrentFrame++;
-                }
-
-                if (CurrentFrame > 13)
-                {
-                    CurrentFrame = 10;
-                }
-
-                electrocutionFrame++;
-
-                CurrentColor = electrocutionColors[(CurrentFrame - 10) % 8];
-            }
+            base.Update(gameTime);
         }
     }
 }

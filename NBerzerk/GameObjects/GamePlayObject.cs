@@ -38,13 +38,13 @@ namespace NBerzerk
 
             for (var robotIndex = 0; robotIndex < 11; robotIndex++)
             {
-                robotObjects[robotIndex] = new RobotObject();
+                robotObjects[robotIndex] = new RobotObject(playerObject, roomObject);
             }
         }
 
         public override void EnterState()
         {
-            playerObject.MoveTo(new Vector2(30, 99));
+            playerObject.MoveTo(30, 99);
             playerObject.Electrocuting = false;
             GetMaze();
             lives = 3;
@@ -85,7 +85,13 @@ namespace NBerzerk
 
             playerObject.Update(gameTime);
 
-            var changeRoom = false;
+            foreach (var robotObject in robotObjects)
+            {
+                if (robotObject.Show)
+                {
+                    robotObject.Update(gameTime);
+                }
+            }
 
             // Check if player has collided with wall
             if (roomObject.Intersects(playerObject.BoundingBox) && !playerObject.Electrocuting)
@@ -93,61 +99,55 @@ namespace NBerzerk
                 playerObject.Electrocuting = true;
                 lives--;
 
+            }
+
+            if (playerObject.Electrocuting && playerObject.PatternFrameIndex == 21)
+            {
                 if (lives == 0)
                 {
                     stateManager.SwitchState(typeof(HighScoresScreenObject).Name);
                 }
-            }
-
-            if (playerObject.Electrocuting && playerObject.electrocutionFrame > 22)
-            {
-                playerObject.CurrentFrame = 0;
-                playerObject.Electrocuting = false;
-                playerObject.electrocutionFrame = 0;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(30, 99));
+                else
+                {
+                    playerObject.Electrocuting = false;
+                    playerObject.MoveTo(30, 99);
+                    GetMaze();
+                }
             }
 
             if (playerObject.Position.Y == 0)
             {
                 roomY--;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(128, 184));
+                playerObject.MoveTo(null, 184);
                 roomObject.ClosedDoor = 'S';
+                GetMaze();
             }
             if (playerObject.Position.X == 0)
             {
                 roomX--;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(223, 99));
+                playerObject.MoveTo(223, null);
                 roomObject.ClosedDoor = 'E';
+                GetMaze();
             }
             if (playerObject.Position.X == 256 - 8)
             {
                 roomX++;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(8, 93));
+                playerObject.MoveTo(8, null);
                 roomObject.ClosedDoor = 'W';
+                GetMaze();
             }
             if (playerObject.Position.Y == 192)
             {
                 roomY++;
-                changeRoom = true;
-                playerObject.MoveTo(new Vector2(125, 5));
+                playerObject.MoveTo(null, 5);
                 roomObject.ClosedDoor = 'N';
-            }
-
-            if (changeRoom)
-            {
                 GetMaze();
             }
         }
 
         private void GetMaze()
         {
-            var roomNo = (UInt16)((roomY << 8) + roomX);
-            roomObject.Maze = MazeGenerator.GenerateMaze(roomNo);
-
+            roomObject.GenerateRoom((UInt16)((roomY << 8) + roomX));
             SetRobotPositions();
         }
 
@@ -194,9 +194,7 @@ namespace NBerzerk
                     randomNumber = (UInt16)(randomNumber & 0x1F);
                     var robotPositionY = (UInt16)(y + randomNumber);
 
-                    var robotXY = new Vector2(robotPositionX, robotPositionY);
-
-                    robotObjects[robotNumber].MoveTo(robotXY);
+                    robotObjects[robotNumber].MoveTo(robotPositionX, robotPositionY);
                     robotObjects[robotNumber].Show = true;
                 }
                 else

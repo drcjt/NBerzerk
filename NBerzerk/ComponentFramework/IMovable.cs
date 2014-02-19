@@ -10,7 +10,7 @@ namespace NBerzerk.ComponentFramework
 {
     interface IMovable : IPositionable
     {
-        void MoveTo(Vector2 position);
-        void Move(Vector2 amount);
+        void MoveTo(float? x, float? y);
+        void Move(float? dx, float? dy);
     }
 }

@@ -16,14 +16,14 @@ namespace NBerzerk.ComponentFramework
     {
         public Vector2 Position { get; set; }
 
-        public void MoveTo(Vector2 position)
+        public void MoveTo(float? x, float? y)
         {
-            Position = position;
+            Position = new Vector2(x ?? Position.X, y ?? Position.Y);
         }
 
-        public void Move(Vector2 amount)
+        public void Move(float? x, float? y)
         {
-            Position += amount;
+            Position += new Vector2(x ?? 0, y ?? 0);
         }
 
         public Vector2 Size { get; set; }
