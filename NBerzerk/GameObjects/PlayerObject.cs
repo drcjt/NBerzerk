@@ -61,8 +61,8 @@ namespace NBerzerk
         public PlayerObject() : base("NBerzerk.Resources.player.png")
         {
             AddPattern("still", new int[] { 0 });
-            AddPattern("east", new int[] { 0, 1, 2, 3, 4});
-            AddPattern("west", new int[] { 5, 6, 7, 8, 9 });
+            AddPattern("east", new int[] { 1, 2, 3, 2});
+            AddPattern("west", new int[] { 7, 6, 5, 6 });
             AddPattern("electrocuting", new int[] { 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 10, 11, 12, 12}, electrocutionColors);
             CurrentPattern = "still";
 
